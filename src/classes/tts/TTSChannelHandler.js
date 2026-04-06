@@ -44,9 +44,9 @@ class TTSChannelHandler {
 
     const messageIntro = this.client.config.get('ENABLE_WHO_SAID') ? `${message.member.displayName} said ` : '';
     const maxLength = this.client.config.get('MAX_MESSAGE_LENGTH');
-    const rawContent = maxLength > 0 && message.content.length > maxLength
-      ? message.content.slice(0, maxLength)
-      : message.content;
+    const rawContent = maxLength > 0 && message.content.length > maxLength ?
+      message.content.slice(0, maxLength) :
+      message.content;
     const textToSay = cleanMessage(`${messageIntro}${rawContent}`, {
       members: members.cache,
       channels: channels.cache,
