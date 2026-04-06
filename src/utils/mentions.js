@@ -1,5 +1,6 @@
 const CUSTOM_EMOJI_PATTERN = /<a?:(.*?):(\d{17,19})>/g;
 const URL_PATTERN = /https?:\/\/[^\s]+/g;
+const MARKDOWN_LINK_PATTERN = /\[([^\]]*)\]\([^)]*\)/g;
 const USERS_PATTERN = /<@!?(\d+)>/g;
 const CHANNELS_PATTERN = /<#(\d+)>/g;
 const ROLES_PATTERN = /<@&(\d+)>/g;
@@ -17,12 +18,15 @@ const cleanRoleMentions = (message) => {
 };
 
 const cleanEmojis = (message) => {
-  return message.replace(CUSTOM_EMOJI_PATTERN, (_, name) => name);
+  return message.replace(CUSTOM_EMOJI_PATTERN, '');
 };
 
 const cleanLinks = (message) => {
-  // Also clean discord's angle brackets around URLs if present
-  return message.replace(/<https?:\/\/[^\s]+>/g, '').replace(URL_PATTERN, '');
+  // Remove markdown links like [sticker name](url) first, then remaining bare URLs
+  return message
+    .replace(/<https?:\/\/[^\s]+>/g, '')
+    .replace(MARKDOWN_LINK_PATTERN, '')
+    .replace(URL_PATTERN, '');
 };
 
 const cleanMessage = (message, { members, channels, roles }) => {
