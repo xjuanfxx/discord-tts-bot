@@ -49,6 +49,10 @@ class TTSChannelHandler {
       roles: roles.cache
     });
 
+    if (textToSay.trim().length === 0) {
+      return;
+    }
+
     if (!memberChannel) {
       return message.reply(localizer.t('command.say.no_channel'));
     }

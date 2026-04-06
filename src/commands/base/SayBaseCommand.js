@@ -52,6 +52,11 @@ class SayBaseCommand extends SlashCommand {
       roles: roles.cache
     });
 
+    if (message.trim().length === 0) {
+      await interaction.editReply('The message is empty after cleaning mentions and links.');
+      return;
+    }
+
     if (!memberChannel) {
       await interaction.editReply(localizer.t('command.say.no_channel'));
       return;
