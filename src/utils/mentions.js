@@ -4,15 +4,15 @@ const USERS_PATTERN = /<@!?(\d+)>/g;
 const CHANNELS_PATTERN = /<#(\d+)>/g;
 const ROLES_PATTERN = /<@&(\d+)>/g;
 
-const cleanMemberMentions = (message, members) => {
+const cleanMemberMentions = (message) => {
   return message.replace(USERS_PATTERN, '');
 };
 
-const cleanChannelMentions = (message, channels) => {
+const cleanChannelMentions = (message) => {
   return message.replace(CHANNELS_PATTERN, '');
 };
 
-const cleanRoleMentions = (message, roles) => {
+const cleanRoleMentions = (message) => {
   return message.replace(ROLES_PATTERN, '');
 };
 
