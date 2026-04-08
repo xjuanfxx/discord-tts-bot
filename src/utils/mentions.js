@@ -1,6 +1,7 @@
+const UNICODE_EMOJI_PATTERN = /[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu;
 const CUSTOM_EMOJI_PATTERN = /<a?:(.*?):(\d{17,19})>/g;
 const URL_PATTERN = /https?:\/\/[^\s]+/g;
-const MARKDOWN_LINK_PATTERN = /\[([^\]]*)\]\([^)]*\)/g;
+const MARKDOWN_LINK_PATTERN = /\[([^\]]*)\]\([^)]*\)?/g;
 const USERS_PATTERN = /<@!?(\d+)>/g;
 const CHANNELS_PATTERN = /<#(\d+)>/g;
 const ROLES_PATTERN = /<@&(\d+)>/g;
@@ -18,7 +19,9 @@ const cleanRoleMentions = (message) => {
 };
 
 const cleanEmojis = (message) => {
-  return message.replace(CUSTOM_EMOJI_PATTERN, '');
+  return message
+    .replace(CUSTOM_EMOJI_PATTERN, '')
+    .replace(UNICODE_EMOJI_PATTERN, '');
 };
 
 const cleanLinks = (message) => {
