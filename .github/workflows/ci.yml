@@ -31,7 +31,8 @@ jobs:
     name: Trigger Docker Build
     runs-on: ubuntu-latest
     needs: test
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.test.result == 'success' }}
+    # Only the original repository can push the Docker image to Docker Hub.
+    if: ${{ github.repository_owner == 'moonstar-x' && github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.test.result == 'success' }}
 
     steps:
       - name: Repository Dispatch

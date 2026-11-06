@@ -1,7 +1,7 @@
 {
   "name": "Discord Text-to-Speech Bot",
   "description": "A small Discord bot that sends Text-to-Speech messages in various languages.",
-  "repository": "https://github.com/moonstar-x/discord-tts-bot",
+  "repository": "https://github.com/xjuanfxx/discord-tts-bot",
   "logo": "https://i.imgur.com/jYh0jOT.png",
   "buildpacks": [
     {

@@ -9,6 +9,7 @@ jobs:
   build_push:
     name: Build Docker Image and Push to Docker Hub
     runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'moonstar-x' }}
 
     steps:
       - name: Checkout the Repository

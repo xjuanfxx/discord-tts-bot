@@ -5,7 +5,7 @@ const MESSAGE_EMBED = {
   amazonLangURL: 'https://docs.moonstar-x.dev/discord-tts-bot/text-to-speech-providers/amazon-ttstool/#language-support',
   microsoftLangURL: 'https://docs.moonstar-x.dev/discord-tts-bot/text-to-speech-providers/microsoft-ttstool/#language-support',
   helpThumbnail: 'https://i.imgur.com/kzy3cTK.png',
-  helpURL: 'https://github.com/moonstar-x/discord-tts-bot/issues'
+  helpURL: 'https://github.com/xjuanfxx/discord-tts-bot/issues'
 };
 
 const EMBED_FIELD_MAX_SIZE = 1024;
