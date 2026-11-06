@@ -97,6 +97,18 @@ const config = new ConfigProvider({
   }
 });
 
+// Only request the intents that are actually used. MessageContent is a privileged intent, it is only
+// needed to read the messages of the TTS channels.
+const getIntents = () => {
+  const intents = [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates];
+
+  if (config.get('ENABLE_TTS_CHANNELS')) {
+    intents.push(GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent);
+  }
+
+  return intents;
+};
+
 const client = new TTSClient({
   config,
   debug: process.argv.includes('--debug'),
@@ -120,7 +132,7 @@ const client = new TTSClient({
     defaultLocale: 'en',
     localeStrings: locales
   },
-  intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent]
+  intents: getIntents()
 });
 
 client
@@ -183,12 +195,16 @@ client.once('ready', async () => {
   });
 
   client.on('guildDelete', async (guild) => {
-    await client.dataProvider.clear(guild);
     client.deleteDependenciesForGuild(guild);
+    await client.dataProvider.clear(guild);
   });
 
-  // This will be removed in a future update.
+  // This will be removed in a future update. Message contents are only received with the MessageContent intent.
   client.on('messageCreate', (message) => {
+    if (!config.get('ENABLE_TTS_CHANNELS')) {
+      return;
+    }
+
     if (message.author.bot || !message.guild || !message.content.startsWith(client.prefix)) {
       return;
     }

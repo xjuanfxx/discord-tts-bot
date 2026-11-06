@@ -1,4 +1,5 @@
-FROM node:20.16.0-alpine3.20
+# @discordjs/voice requires Node.js 22.12 or newer.
+FROM node:22-alpine
 
 ARG DATE_CREATED
 ARG VERSION
@@ -17,7 +18,7 @@ WORKDIR /opt/app
 
 COPY package*.json ./
 
-RUN npm ci --only=prod
+RUN npm ci --omit=dev
 
 COPY . .
 
