@@ -139,7 +139,7 @@ Inside the `config` folder, rename the file *settings.json.example* to *settings
   "owner_reporting": false,
   "presence_refresh_interval": 600000,
   "default_disconnect_timeout": 5,
-  "testing_guild_id": null,
+  "testing_guild_id": "",
   "provider_type": "level",
   "redis_url": "redis://ip:port",
   "enable_tts_channels": false,
@@ -149,7 +149,7 @@ Inside the `config` folder, rename the file *settings.json.example* to *settings
   "enable_emoji_names": true,
   "leave_when_alone": true,
   "tts_channel_ignore_prefix": "//",
-  "elevenlabs_api_key": null,
+  "elevenlabs_api_key": "",
   "elevenlabs_voice_id": "EXAVITQu4vr4xnSDxMaL",
   "elevenlabs_model_id": "eleven_v3",
   "elevenlabs_language": "en",
@@ -166,6 +166,8 @@ Inside the `config` folder, rename the file *settings.json.example* to *settings
 
 Every setting can also be set with an environment variable: `DISCORD_` + the setting in uppercase (e.g. `max_message_length` → `DISCORD_MAX_MESSAGE_LENGTH`). Environment variables take precedence over the JSON file. Only `token` is required.
 
+> **Keep the double quotes**: text values like the token, IDs and API keys always go between quotes, e.g. `"elevenlabs_api_key": "sk_..."`. Numbers (`0`, `0.75`) and `true` / `false` don't. If the file has a mistake, the bot tells you the line and column without printing its contents.
+
 #### General
 
 | Setting | Default | Description |
@@ -175,7 +177,7 @@ Every setting can also be set with an environment variable: `DISCORD_` + the set
 | `owner_reporting` | `false` | DM the owner when a command errors. |
 | `presence_refresh_interval` | `900000` | Milliseconds between presence updates. `null` disables it. |
 | `default_disconnect_timeout` | `5` | Minutes of inactivity before leaving the voice channel (servers can change it with `/set_timeout`). |
-| `testing_guild_id` | `null` | Guild to deploy the commands to while developing. |
+| `testing_guild_id` | `""` | Guild to deploy the commands to while developing. |
 | `provider_type` | `level` | Data storage: `level` (a local file, small bots) or `redis` (sharded bots). |
 | `redis_url` | `null` | Redis URL, only for `provider_type: redis`. |
 | `enable_keep_alive` | `false` | Start an HTTP server to keep the bot alive on Repl.it / Heroku (uses the `PORT` env var). |
@@ -196,7 +198,7 @@ Every setting can also be set with an environment variable: `DISCORD_` + the set
 
 | Setting | Default | Description |
 |---|---|---|
-| `elevenlabs_api_key` | `null` | Your [ElevenLabs](https://elevenlabs.io) API key. The provider is disabled without it. |
+| `elevenlabs_api_key` | `""` | Your [ElevenLabs](https://elevenlabs.io) API key. The provider is disabled without it. |
 | `elevenlabs_voice_id` | `EXAVITQu4vr4xnSDxMaL` | Default voice. Get the IDs with `/elevenlabs_voices`. |
 | `elevenlabs_model_id` | `eleven_v3` | Model. `eleven_flash_v2_5` is faster and cheaper. |
 | `elevenlabs_language` | `en` | Language of your voices, used to read emoji names. |
