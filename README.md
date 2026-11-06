@@ -1,4 +1,4 @@
-![banner](https://i.imgur.com/HT7Wmv1.jpg)
+![Discord TTS Bot](.github/assets/banner.png)
 
 [![ci-build-status](https://img.shields.io/github/actions/workflow/status/xjuanfxx/discord-tts-bot/ci.yml?branch=master&logo=github)](https://github.com/xjuanfxx/discord-tts-bot/actions)
 [![open-issues-count](https://img.shields.io/github/issues-raw/xjuanfxx/discord-tts-bot?logo=github)](https://github.com/xjuanfxx/discord-tts-bot/issues)
@@ -7,7 +7,7 @@
 
 This is a simple TTS Bot that uses the Google Translate TTS API. With this bot you can send Text-to-Speech messages in multiple languages using Google Translate or other TTS engines (Microsoft Edge neural voices, Amazon, Microsoft, aeiou and ElevenLabs AI).
 
-> This is a fork of [moonstar-x/discord-tts-bot](https://github.com/moonstar-x/discord-tts-bot) with extra features and fixes. For the documentation of the original bot, visit its [official page](https://docs.moonstar-x.dev/discord-tts-bot/).
+> 💛 **Based on [discord-tts-bot](https://github.com/moonstar-x/discord-tts-bot) by [moonstar-x](https://github.com/moonstar-x).** This fork adds new voice providers, smarter text processing and many fixes on top of the original bot. All the credit for the original idea and code goes to its author, see [Credits](#credits). For the documentation of the original bot, visit its [official page](https://docs.moonstar-x.dev/discord-tts-bot/).
 
 ## What's new in this fork
 
@@ -24,6 +24,10 @@ This is a simple TTS Bot that uses the Google Translate TTS API. With this bot y
 * The *"User said"* intro is translated (*"Juan dijo"*, *"Juan a dit"*).
 * **Hardened voice connection**: the bot joins self-deafened (but not muted), uses Discord's end-to-end encrypted voice (DAVE), recovers when moved between channels, cleans up when kicked, never hangs when it can't connect, tells you when it has been server muted and can speak in stage channels.
 * **Follows Discord's guidelines**: only requests the privileged *Message Content* intent when TTS channels are enabled, doesn't keep message contents in the logs (only in debug mode) and doesn't spam warning replies in TTS channels.
+* **Safer configuration**: if `settings.json` has a mistake the bot tells you the line and column without printing its contents (your token and keys never end up in the console), and `""` or `"null"` are treated as "not set".
+* **Ready for modern hosting**: Node.js 22, npm 12 (install scripts allowed for the native audio packages) and a [startup command for Pterodactyl panels](#running-on-a-pterodactyl-panel) that updates the bot and deploys the commands automatically.
+
+![Voice providers](.github/assets/providers.png)
 
 ## Requirements
 
@@ -245,6 +249,23 @@ The following volumes can be used:
 * `/opt/app/config`: The config folder for the bot, here you can use the `settings.json` file to configure the bot if you don't want to use environment variables.
 * `/opt/app/data`: The data folder for the bot. If you use a `level` data provider you should set this volume to keep the bot's data persistent across restarts.
 
+## Running on a Pterodactyl panel
+
+On hosting panels based on Pterodactyl (with a Node.js egg), use a **Node.js 22** image, leave *Additional Node Packages* empty and set the **Startup Command** to:
+
+```bash
+if [[ ! -d .git ]]; then git init && git remote add origin https://github.com/xjuanfxx/discord-tts-bot.git; fi; git fetch origin master && git reset --hard origin/master; /usr/local/bin/npm install --omit=dev --no-audit --no-fund; H=$(cat src/command-deployer.js $(find src/commands -type f | sort) | md5sum | cut -d' ' -f1); if [[ "$H" != "$(cat .deployed-hash 2>/dev/null)" ]]; then /usr/local/bin/node /home/container/src/command-deployer.js && echo "$H" > .deployed-hash; fi; /usr/local/bin/node /home/container/src/app.js
+```
+
+On every start it:
+
+1. Downloads the bot the first time, and the latest version of `master` on the next starts. Your `config/settings.json` and `data/` folder are never touched (git ignores them).
+2. Installs the dependencies.
+3. Deploys the commands to Discord, only when they changed since the last time.
+4. Starts the bot.
+
+So to update the bot you just restart the server. Upload your `config/settings.json` with the file manager. If you change `enable_tts_channels`, delete the `.deployed-hash` file so the commands are deployed again.
+
 ## Running on Repl.it
 
 To run this bot on Repl.it, create a new Repl by importing this repository. Then, run the following commands:
@@ -334,6 +355,8 @@ The model (`elevenlabs_model_id`) defaults to `eleven_flash_v2_5`, the one with 
 
 ## Text processing
 
+![How a message is read](.github/assets/processing.png)
+
 Before a message is spoken, the bot:
 
 1. Cuts it to the [character limit](#character-limits) (in TTS channels) or rejects it (in slash commands).
@@ -375,6 +398,12 @@ The effective limit is the lowest of them, so servers can only lower the limit s
 
 Edge, Amazon, Microsoft and ElevenLabs have their own lists: use `/edge_voices`, `/amazon_langs`, `/ms_langs` and `/elevenlabs_voices`.
 
-## Author
+## Credits
 
-This bot was made by [moonstar-x](https://github.com/moonstar-x). This fork is maintained by [xjuanfxx](https://github.com/xjuanfxx).
+* **[moonstar-x](https://github.com/moonstar-x)** created the original [discord-tts-bot](https://github.com/moonstar-x/discord-tts-bot) and the [`@greencoast`](https://github.com/greencoast-studios) libraries this bot is built on. This fork wouldn't exist without their work. If you like the bot, go give the [original repository](https://github.com/moonstar-x/discord-tts-bot) a ⭐.
+* **[xjuanfxx](https://github.com/xjuanfxx)** maintains this fork.
+* Built with [discord.js](https://discord.js.org) and [@discordjs/voice](https://github.com/discordjs/discord.js/tree/main/packages/voice), [google-tts-api](https://github.com/zlargon/google-tts), [msedge-tts](https://github.com/Migushthe2nd/MsEdgeTTS) and [ElevenLabs](https://elevenlabs.io). Emoji names come from [Emojibase](https://emojibase.dev) (Unicode CLDR annotations).
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). The original copyright notice of moonstar-x is kept, as the license requires.
