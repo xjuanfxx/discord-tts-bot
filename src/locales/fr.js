@@ -31,6 +31,7 @@ const COMMAND = {
   'command.say.joined.withrequest': "J'ai rejoint le canal vocal {channel}.",
   'command.say.joined': "J'ai rejoint le canal vocal {channel}.",
   'command.say.empty': 'Il ne reste rien à dire après avoir retiré les mentions, liens et emojis.',
+  'command.say.provider_unavailable': "Le fournisseur **{name}** n'est pas configuré sur ce bot. Demandez au propriétaire du bot de le configurer.",
 
   'command.stop.no_connection': 'Je ne suis pas dans un canal vocal.',
   'command.stop.different_channel': "Vous devez être dans un mon canal vocal pour m'arrêter.",
@@ -139,6 +140,14 @@ const COMMAND = {
   'command.microsoft.settings.my.rate.success': 'Vous avez changé votre rythme à **{rate}** avec succès.',
   'command.microsoft.settings.my.pitch.success': 'Vous avez changé votre ton de voix à **{pitch}** avec succès.',
 
+  'command.elevenlabs.voices.embed.title': 'Voix disponibles pour le fournisseur ElevenLabs :',
+  'command.elevenlabs.voices.embed.footer': 'Utilisez /elevenlabs_set_my voice NOM pour en choisir une pour vous.',
+  'command.elevenlabs.voices.empty': "Aucune voix n'est disponible.",
+  'command.elevenlabs.voices.error': "Je n'ai pas pu obtenir la liste des voix d'ElevenLabs, réessayez plus tard.",
+  'command.elevenlabs.settings.voice.unsupported': "La voix **{voice}** n'existe pas. Utilisez **/elevenlabs_voices** pour voir les voix disponibles.",
+  'command.elevenlabs.settings.my.voice.success': 'Vous avez changé votre voix à **{voice}** avec succès.',
+  'command.elevenlabs.settings.default.voice.success': 'Vous avez changé la voix par défaut à **{voice}** avec succès.',
+
   'command.locale.success': 'Vous avez changée la langue du bot à **{locale}**.',
 
   'command.timeout.out_of_range': 'Temps invalide, il doit se trouver entre **{min}** et **{max}**.',
@@ -150,6 +159,8 @@ const TTS = {
 };
 
 const CHANNEL_COMMANDS = {
+  'channel_commands.elevenlabs.settings.voice.success': 'Vous avez changé la voix de ce canal à **{voice}** avec succès.',
+
   'channel_commands.set.success': 'Vous avez changé le fournisseur pour ce canal à **{name}**.',
 
   'channel_commands.settings.enabled.embed.title': 'Voici les réglages actuels du canal **#{channel}**',

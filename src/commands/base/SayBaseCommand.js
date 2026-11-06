@@ -4,7 +4,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const logger = require('@greencoast/logger');
 const { getCantConnectToChannelReason } = require('../../utils/channel');
-const { buildTTSText } = require('../../utils/tts-text');
+const { buildTTSText, getMaxMessageLength } = require('../../utils/tts-text');
 
 class SayBaseCommand extends SlashCommand {
   constructor(client, options) {
@@ -39,13 +39,18 @@ class SayBaseCommand extends SlashCommand {
     const providerName = this.getProviderName(currentSettings);
     const extras = currentSettings[providerName];
 
+    if (!this.client.providerManager.getProvider(providerName).isAvailable()) {
+      await interaction.editReply(localizer.t('command.say.provider_unavailable', { name: providerName }));
+      return;
+    }
+
     const { members: { me: { voice: myVoice } }, name: guildName } = interaction.guild;
     const { channel: memberChannel } = interaction.member.voice;
     const myChannel = myVoice?.channel;
 
     const userMessage = interaction.options.getString('message');
 
-    const maxLength = this.client.config.get('MAX_MESSAGE_LENGTH');
+    const maxLength = getMaxMessageLength(this.client.config, providerName);
     if (maxLength > 0 && userMessage.length > maxLength) {
       await interaction.editReply(localizer.t('command.say.too_long', { max: maxLength }));
       return;

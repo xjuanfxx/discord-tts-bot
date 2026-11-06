@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 const logger = require('@greencoast/logger');
-const { buildTTSText } = require('../../utils/tts-text');
+const { buildTTSText, getMaxMessageLength } = require('../../utils/tts-text');
 const { getCantConnectToChannelReason } = require('../../utils/channel');
 
 class TTSChannelHandler {
@@ -47,7 +47,11 @@ class TTSChannelHandler {
     const { channel: memberChannel } = message.member.voice;
     const myChannel = myVoice?.channel;
 
-    const maxLength = this.client.config.get('MAX_MESSAGE_LENGTH');
+    if (!this.client.providerManager.getProvider(channelSettings.provider).isAvailable()) {
+      return message.reply(localizer.t('command.say.provider_unavailable', { name: channelSettings.provider }));
+    }
+
+    const maxLength = getMaxMessageLength(this.client.config, channelSettings.provider);
     const rawContent = maxLength > 0 && message.content.length > maxLength ?
       message.content.slice(0, maxLength) :
       message.content;

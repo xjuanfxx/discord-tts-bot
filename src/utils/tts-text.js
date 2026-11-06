@@ -34,6 +34,20 @@ const buildTTSText = async (client, { member, content, extras, mentionedMembers 
     text;
 };
 
+/**
+ * Gets the max message length for a provider. Providers may have their own limit in the config
+ * (e.g. ELEVENLABS_MAX_MESSAGE_LENGTH, since it is a paid API), otherwise MAX_MESSAGE_LENGTH is used.
+ * @param {ConfigProvider} config
+ * @param {string} providerName
+ * @returns {number} 0 means no limit.
+ */
+const getMaxMessageLength = (config, providerName) => {
+  const specific = config.get(`${providerName.toUpperCase()}_MAX_MESSAGE_LENGTH`) || 0;
+
+  return specific > 0 ? specific : config.get('MAX_MESSAGE_LENGTH');
+};
+
 module.exports = {
-  buildTTSText
+  buildTTSText,
+  getMaxMessageLength
 };

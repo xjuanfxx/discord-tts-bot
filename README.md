@@ -148,6 +148,16 @@ This table contains all the configuration settings you may specify with both env
 | DISCORD_ENABLE_EMOJI_NAMES         | `enable_emoji_names`         | No. (Defaults to: `true`)   | `boolean`                  | Whether the bot should read emojis out loud by their name (e.g. 😎 is read as *smiling face with sunglasses*, or *cara sonriendo con gafas de sol* in Spanish) instead of skipping them. The language of the name follows the TTS language. Custom server emojis are read by their name and repeated consecutive emojis are only read once. |
 | DISCORD_LEAVE_WHEN_ALONE           | `leave_when_alone`           | No. (Defaults to: `true`)   | `boolean`                  | Whether the bot should leave its voice channel (15 seconds) after everyone else has left it, instead of waiting for the inactivity timeout. |
 | DISCORD_TTS_CHANNEL_IGNORE_PREFIX  | `tts_channel_ignore_prefix`  | No. (Defaults to: `//`)     | `string` or `null`         | Messages in TTS channels that start with this prefix are not read out loud. Set it to `null` to read every message. |
+| DISCORD_ELEVENLABS_API_KEY         | `elevenlabs_api_key`         | No. (Defaults to: `null`)   | `string` or `null`         | Your [ElevenLabs](https://elevenlabs.io) API key. The ElevenLabs provider and its commands only work when this is set. |
+| DISCORD_ELEVENLABS_VOICE_ID        | `elevenlabs_voice_id`        | No. (Defaults to: `EXAVITQu4vr4xnSDxMaL`) | `string`                   | The voice used when neither the user, the channel nor the server picked one. Use `/elevenlabs_voices` to get the IDs. |
+| DISCORD_ELEVENLABS_MODEL_ID        | `elevenlabs_model_id`        | No. (Defaults to: `eleven_v3`) | `string`                   | The ElevenLabs model. `eleven_flash_v2_5` is faster and cheaper, `eleven_multilingual_v2` / `eleven_v3` sound better. |
+| DISCORD_ELEVENLABS_LANGUAGE        | `elevenlabs_language`        | No. (Defaults to: `en`)     | `string`                   | The language of your voices (e.g. `es`). Only used to read emoji names in the right language. |
+| DISCORD_ELEVENLABS_STABILITY       | `elevenlabs_stability`       | No. (Defaults to: `0.75`)   | `number` (0 - 1)           | Voice stability. |
+| DISCORD_ELEVENLABS_SIMILARITY_BOOST | `elevenlabs_similarity_boost` | No. (Defaults to: `0.75`)   | `number` (0 - 1)           | How close the output should be to the original voice. |
+| DISCORD_ELEVENLABS_STYLE           | `elevenlabs_style`           | No. (Defaults to: `0.3`)    | `number` (0 - 1)           | Style exaggeration. |
+| DISCORD_ELEVENLABS_SPEAKER_BOOST   | `elevenlabs_speaker_boost`   | No. (Defaults to: `true`)   | `boolean`                  | Whether to use speaker boost. |
+| DISCORD_ELEVENLABS_OUTPUT_FORMAT   | `elevenlabs_output_format`   | No. (Defaults to: `mp3_44100_128`) | `string`                   | The audio format requested to ElevenLabs. |
+| DISCORD_ELEVENLABS_MAX_MESSAGE_LENGTH | `elevenlabs_max_message_length` | No. (Defaults to: `0`)      | `number`                   | Max characters per message for ElevenLabs only (it is charged per character). If `0`, `max_message_length` is used. |
 
 > If you set `enable_tts_channels` to `true`, you must enable the message content privileged intent in your bot's [application page](https://discord.com/developers/applications/).
 
@@ -226,6 +236,10 @@ Here's a list of all the commands for the bot:
 | /google_set_my speed \<speed\>            |           | Sets the speed to be used by the say and google_say command for yourself.                           |                      |
 | /help                                     |           | Display a help message with all the available commands.                                             |                      |
 | /aeiou_say \<message\>                    |           | Send an aeiou (sounds like Stephen Hawking) TTS message in your voice channel.                      |                      |
+| /elevenlabs_say \<message\>               |           | Send an ElevenLabs AI TTS message in your voice channel (requires `elevenlabs_api_key`).            |                      |
+| /elevenlabs_voices                        |           | Display a list of the voices available for the ElevenLabs provider.                                 |                      |
+| /elevenlabs_set_my voice \<voice\>        |           | Sets the ElevenLabs voice (name or ID) to be used for yourself.                                     |                      |
+| /elevenlabs_set_default voice \<voice\>   |           | Sets the ElevenLabs voice (name or ID) to be used by default in the server.                         | `MANAGE_GUILD`       |
 
 If you have `enable_tts_channels` set to `true`, you will have access to the additional commands:
 
@@ -236,6 +250,7 @@ If you have `enable_tts_channels` set to `true`, you will have access to the add
 | /set_channel_provider \<provider\>        | Sets the provider to be used by the message-only based TTS on specific channels. | `MANAGE_CHANNELS`    |
 | /google_set_channel language \<language\> | Sets the language to be used by the say and google_say command by default.       | `MANAGE_CHANNELS`    |
 | /google_set_channel speed \<speed\>       | Sets the speed to be used by the say and google_say command by default.          | `MANAGE_CHANNELS`    | 
+| /elevenlabs_set_channel voice \<voice\>   | Sets the ElevenLabs voice to be used by the message-only based TTS on this channel. | `MANAGE_CHANNELS`    |
 
 > Up until now, these settings are saved in memory, which means if the bot crashes/restarts, all of these settings will go back to default (`Language: English, Speed: normal`).
 

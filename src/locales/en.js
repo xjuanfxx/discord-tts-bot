@@ -31,6 +31,7 @@ const COMMAND = {
   'command.say.joined.withrequest': 'Joined {channel} - Saying "{request}".',
   'command.say.joined': 'Joined {channel}',
   'command.say.empty': 'There is nothing left to say after removing mentions, links and emojis.',
+  'command.say.provider_unavailable': 'The **{name}** provider is not configured on this bot. Ask the bot owner to set it up.',
 
   'command.stop.no_connection': "I'm not in a voice channel.",
   'command.stop.different_channel': 'You need to be in my voice channel to stop me.',
@@ -139,6 +140,14 @@ const COMMAND = {
   'command.microsoft.settings.my.rate.success': 'You have successfully changed your rate to **{rate}**.',
   'command.microsoft.settings.my.pitch.success': 'You have successfully changed your pitch to **{pitch}**.',
 
+  'command.elevenlabs.voices.embed.title': 'Voices available for the ElevenLabs provider:',
+  'command.elevenlabs.voices.embed.footer': 'Use /elevenlabs_set_my voice NAME to pick one for yourself.',
+  'command.elevenlabs.voices.empty': 'There are no voices available.',
+  'command.elevenlabs.voices.error': 'I could not get the list of voices from ElevenLabs, try again later.',
+  'command.elevenlabs.settings.voice.unsupported': 'The voice **{voice}** does not exist. Use **/elevenlabs_voices** to check the voices available.',
+  'command.elevenlabs.settings.my.voice.success': 'You have successfully changed your voice to **{voice}**.',
+  'command.elevenlabs.settings.default.voice.success': 'You have successfully changed the default voice to **{voice}**.',
+
   'command.locale.success': "You have changed the bot's locale to **{locale}**.",
 
   'command.timeout.out_of_range': 'Invalid time, it must be between **{min}** and **{max}**.',
@@ -150,6 +159,8 @@ const TTS = {
 };
 
 const CHANNEL_COMMANDS = {
+  'channel_commands.elevenlabs.settings.voice.success': "You have successfully changed this channel's voice to **{voice}**.",
+
   'channel_commands.set.success': 'You have successfully changed the provider for this channel to **{name}**.',
 
   'channel_commands.settings.enabled.embed.title': "Here's the current settings for the channel **#{channel}**",

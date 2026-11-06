@@ -12,6 +12,12 @@ const pkg = require('../package.json');
 
 const SUPPORTED_PROVIDERS = ['level', 'redis'];
 
+const validateUnitInterval = (name, value) => {
+  if (isNaN(value) || value < 0 || value > 1) {
+    throw new TypeError(`${name} must be a number between 0 and 1.`);
+  }
+};
+
 const config = new ConfigProvider({
   configPath: path.join(__dirname, '../config/settings.json'),
   env: process.env,
@@ -30,7 +36,17 @@ const config = new ConfigProvider({
     MAX_MESSAGE_LENGTH: 0,
     ENABLE_EMOJI_NAMES: true,
     LEAVE_WHEN_ALONE: true,
-    TTS_CHANNEL_IGNORE_PREFIX: '//'
+    TTS_CHANNEL_IGNORE_PREFIX: '//',
+    ELEVENLABS_API_KEY: null,
+    ELEVENLABS_VOICE_ID: 'EXAVITQu4vr4xnSDxMaL',
+    ELEVENLABS_MODEL_ID: 'eleven_v3',
+    ELEVENLABS_LANGUAGE: 'en',
+    ELEVENLABS_STABILITY: 0.75,
+    ELEVENLABS_SIMILARITY_BOOST: 0.75,
+    ELEVENLABS_STYLE: 0.3,
+    ELEVENLABS_SPEAKER_BOOST: true,
+    ELEVENLABS_OUTPUT_FORMAT: 'mp3_44100_128',
+    ELEVENLABS_MAX_MESSAGE_LENGTH: 0
   },
   types: {
     TOKEN: 'string',
@@ -48,7 +64,17 @@ const config = new ConfigProvider({
     MAX_MESSAGE_LENGTH: 'number',
     ENABLE_EMOJI_NAMES: 'boolean',
     LEAVE_WHEN_ALONE: 'boolean',
-    TTS_CHANNEL_IGNORE_PREFIX: ['string', 'null']
+    TTS_CHANNEL_IGNORE_PREFIX: ['string', 'null'],
+    ELEVENLABS_API_KEY: ['string', 'null'],
+    ELEVENLABS_VOICE_ID: 'string',
+    ELEVENLABS_MODEL_ID: 'string',
+    ELEVENLABS_LANGUAGE: 'string',
+    ELEVENLABS_STABILITY: 'number',
+    ELEVENLABS_SIMILARITY_BOOST: 'number',
+    ELEVENLABS_STYLE: 'number',
+    ELEVENLABS_SPEAKER_BOOST: 'boolean',
+    ELEVENLABS_OUTPUT_FORMAT: 'string',
+    ELEVENLABS_MAX_MESSAGE_LENGTH: 'number'
   },
   customValidators: {
     PROVIDER_TYPE: (value) => {
@@ -56,6 +82,9 @@ const config = new ConfigProvider({
         throw new TypeError(`${value} is not a valid data provider, it must be one of ${SUPPORTED_PROVIDERS.join(', ')}`);
       }
     },
+    ELEVENLABS_STABILITY: (value) => validateUnitInterval('ELEVENLABS_STABILITY', value),
+    ELEVENLABS_SIMILARITY_BOOST: (value) => validateUnitInterval('ELEVENLABS_SIMILARITY_BOOST', value),
+    ELEVENLABS_STYLE: (value) => validateUnitInterval('ELEVENLABS_STYLE', value),
     DEFAULT_DISCONNECT_TIMEOUT: (value) => {
       if (isNaN(value)) {
         throw new TypeError('DEFAULT_DISCONNECT_TIMEOUT must be a number!');
@@ -107,7 +136,8 @@ client.registry
     ['google-tts', 'Google TTS Commands'],
     ['other-tts', 'Other TTS Commands'],
     ['misc', 'Miscellaneous Commands'],
-    ['ms-tts', 'Microsoft TTS Commands']
+    ['ms-tts', 'Microsoft TTS Commands'],
+    ['elevenlabs-tts', 'ElevenLabs TTS Commands']
   ])
   .registerCommandsIn(path.join(__dirname, './commands/main'));
 

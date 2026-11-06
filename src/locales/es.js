@@ -31,6 +31,7 @@ const COMMAND = {
   'command.say.joined.withrequest': 'Entré a {channel}.',
   'command.say.joined': 'Entré a {channel}.',
   'command.say.empty': 'No queda nada que decir después de quitar menciones, enlaces y emojis.',
+  'command.say.provider_unavailable': 'El proveedor **{name}** no está configurado en este bot. Pídele al dueño del bot que lo configure.',
 
   'command.stop.no_connection': 'No estoy en un canal de voz.',
   'command.stop.different_channel': 'Necesitas estar en mi canal de voz para detenerme.',
@@ -139,6 +140,14 @@ const COMMAND = {
   'command.microsoft.settings.my.rate.success': 'Has cambiado tu ritmo a **{rate}** con éxito.',
   'command.microsoft.settings.my.pitch.success': 'Has cambiado tu tono a **{pitch}** con éxito.',
 
+  'command.elevenlabs.voices.embed.title': 'Voces disponibles para el proveedor ElevenLabs:',
+  'command.elevenlabs.voices.embed.footer': 'Usa /elevenlabs_set_my voice NOMBRE para elegir una para ti.',
+  'command.elevenlabs.voices.empty': 'No hay voces disponibles.',
+  'command.elevenlabs.voices.error': 'No pude obtener la lista de voces de ElevenLabs, inténtalo más tarde.',
+  'command.elevenlabs.settings.voice.unsupported': 'La voz **{voice}** no existe. Usa **/elevenlabs_voices** para ver las voces disponibles.',
+  'command.elevenlabs.settings.my.voice.success': 'Has cambiado tu voz a **{voice}** con éxito.',
+  'command.elevenlabs.settings.default.voice.success': 'Has cambiado la voz por defecto a **{voice}** con éxito.',
+
   'command.locale.success': 'Has cambiado el idioma del bot a **{locale}**.',
 
   'command.timeout.out_of_range': 'Tiempo inválido, necesitar estar entre **{min}** y **{max}**.',
@@ -150,6 +159,8 @@ const TTS = {
 };
 
 const CHANNEL_COMMANDS = {
+  'channel_commands.elevenlabs.settings.voice.success': 'Has cambiado la voz de este canal a **{voice}** con éxito.',
+
   'channel_commands.set.success': 'Has cambiado el proveedor de este canal a **{name}** con éxito.',
 
   'channel_commands.settings.enabled.embed.title': 'Aquí está la configuración actual para el canal **#{channel}**',

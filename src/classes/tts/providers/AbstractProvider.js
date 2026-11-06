@@ -22,6 +22,14 @@ class AbstractProvider {
   }
 
   /**
+   * Whether this provider can be used (e.g. it has the API key it needs).
+   * @returns {boolean}
+   */
+  isAvailable() {
+    return true;
+  }
+
+  /**
    * Gets the message to log once a TTS message has been played.
    * @param {Payload} payload The payload for this TTS message.
    * @param {Discord.Guild} guild The guild where the TTS message was played.

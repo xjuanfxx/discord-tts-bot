@@ -75,6 +75,25 @@
       "description": "Messages in TTS channels that start with this prefix are not read out loud.",
       "value": "//",
       "required": false
+    },
+    "DISCORD_ELEVENLABS_API_KEY": {
+      "description": "Your ElevenLabs API key. Leave empty to disable the ElevenLabs provider.",
+      "required": false
+    },
+    "DISCORD_ELEVENLABS_VOICE_ID": {
+      "description": "The default ElevenLabs voice ID.",
+      "value": "EXAVITQu4vr4xnSDxMaL",
+      "required": false
+    },
+    "DISCORD_ELEVENLABS_MODEL_ID": {
+      "description": "The ElevenLabs model to use.",
+      "value": "eleven_v3",
+      "required": false
+    },
+    "DISCORD_ELEVENLABS_MAX_MESSAGE_LENGTH": {
+      "description": "Max characters per message for ElevenLabs (0 = use DISCORD_MAX_MESSAGE_LENGTH).",
+      "value": "0",
+      "required": false
     }
   }
 }
