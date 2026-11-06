@@ -7,6 +7,10 @@ on:
     branches: [master]
   workflow_dispatch:
 
+# The CI only needs to read the code.
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Run Tests
