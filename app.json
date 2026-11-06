@@ -65,6 +65,16 @@
       "description": "Whether the bot should read emojis out loud by their name (e.g. 😎 -> 'smiling face with sunglasses') instead of skipping them.",
       "value": "true",
       "required": false
+    },
+    "DISCORD_LEAVE_WHEN_ALONE": {
+      "description": "Whether the bot should leave its voice channel after everyone else has left it.",
+      "value": "true",
+      "required": false
+    },
+    "DISCORD_TTS_CHANNEL_IGNORE_PREFIX": {
+      "description": "Messages in TTS channels that start with this prefix are not read out loud.",
+      "value": "//",
+      "required": false
     }
   }
 }

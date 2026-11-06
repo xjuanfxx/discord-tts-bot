@@ -4,7 +4,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const logger = require('@greencoast/logger');
 const { getCantConnectToChannelReason } = require('../../utils/channel');
-const { cleanMessage } = require('../../utils/mentions');
+const { buildTTSText } = require('../../utils/tts-text');
 
 class SayBaseCommand extends SlashCommand {
   constructor(client, options) {
@@ -39,11 +39,10 @@ class SayBaseCommand extends SlashCommand {
     const providerName = this.getProviderName(currentSettings);
     const extras = currentSettings[providerName];
 
-    const { members: { me: { voice: myVoice } }, name: guildName, members, channels, roles } = interaction.guild;
+    const { members: { me: { voice: myVoice } }, name: guildName } = interaction.guild;
     const { channel: memberChannel } = interaction.member.voice;
     const myChannel = myVoice?.channel;
 
-    const messageIntro = this.client.config.get('ENABLE_WHO_SAID') ? `${interaction.member.displayName} said ` : '';
     const userMessage = interaction.options.getString('message');
 
     const maxLength = this.client.config.get('MAX_MESSAGE_LENGTH');
@@ -52,16 +51,10 @@ class SayBaseCommand extends SlashCommand {
       return;
     }
 
-    const message = cleanMessage(`${messageIntro}${userMessage}`, {
-      members: members.cache,
-      channels: channels.cache,
-      roles: roles.cache,
-      readEmojis: this.client.config.get('ENABLE_EMOJI_NAMES'),
-      language: extras?.language
-    });
+    const message = await buildTTSText(this.client, { member: interaction.member, content: userMessage, extras });
 
-    if (message.trim().length === 0) {
-      await interaction.editReply('The message is empty after cleaning mentions and links.');
+    if (message.length === 0) {
+      await interaction.editReply(localizer.t('command.say.empty'));
       return;
     }
 

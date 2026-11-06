@@ -30,10 +30,23 @@ const COMMAND = {
   'command.say.success': 'Diré eso ahora.',
   'command.say.joined.withrequest': 'Entré a {channel}.',
   'command.say.joined': 'Entré a {channel}.',
+  'command.say.empty': 'No queda nada que decir después de quitar menciones, enlaces y emojis.',
 
   'command.stop.no_connection': 'No estoy en un canal de voz.',
   'command.stop.different_channel': 'Necesitas estar en mi canal de voz para detenerme.',
   'command.stop.success': 'He salido del canal de voz {channel} con éxito.',
+
+  'command.skip.different_channel': 'Necesitas estar en mi canal de voz para saltar mensajes.',
+  'command.skip.nothing': 'No estoy diciendo nada en este momento.',
+  'command.skip.success': 'Mensaje actual saltado.',
+
+  'command.dictionary.add.invalid': 'La palabra y su reemplazo no pueden estar vacíos.',
+  'command.dictionary.add.full': 'El diccionario está lleno, solo puede tener **{max}** palabras. Quita algunas con **/dictionary_remove**.',
+  'command.dictionary.add.success': 'De ahora en adelante leeré **{word}** como **{replacement}**.',
+  'command.dictionary.remove.not_found': '**{word}** no está en el diccionario.',
+  'command.dictionary.remove.success': 'He quitado **{word}** del diccionario.',
+  'command.dictionary.list.empty': 'El diccionario está vacío. Agrega palabras con **/dictionary_add**.',
+  'command.dictionary.list.embed.title': 'Diccionario de este servidor ({count})',
 
   'command.help.embed.title': 'Mensaje de ayuda de Text-to-Speech',
   'command.help.links.bug': '¿Encontraste un bug? ¡Repórtalo!',
@@ -132,6 +145,10 @@ const COMMAND = {
   'command.timeout.success': 'Me iré del canal de voz después de **{timeout}** minutos de inactividad.'
 };
 
+const TTS = {
+  'tts.who_said': '{name} dijo'
+};
+
 const CHANNEL_COMMANDS = {
   'channel_commands.set.success': 'Has cambiado el proveedor de este canal a **{name}** con éxito.',
 
@@ -175,5 +192,6 @@ module.exports = {
   ...APP,
   ...ERROR,
   ...COMMAND,
-  ...CHANNEL_COMMANDS
+  ...CHANNEL_COMMANDS,
+  ...TTS
 };

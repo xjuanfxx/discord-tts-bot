@@ -30,10 +30,23 @@ const COMMAND = {
   'command.say.success': 'Saying "{request}".',
   'command.say.joined.withrequest': 'Joined {channel} - Saying "{request}".',
   'command.say.joined': 'Joined {channel}',
+  'command.say.empty': 'There is nothing left to say after removing mentions, links and emojis.',
 
   'command.stop.no_connection': "I'm not in a voice channel.",
   'command.stop.different_channel': 'You need to be in my voice channel to stop me.',
   'command.stop.success': 'Successfully left the voice channel {channel}.',
+
+  'command.skip.different_channel': 'You need to be in my voice channel to skip messages.',
+  'command.skip.nothing': "I'm not saying anything right now.",
+  'command.skip.success': 'Skipped the current message.',
+
+  'command.dictionary.add.invalid': 'The word and the replacement cannot be empty.',
+  'command.dictionary.add.full': 'The dictionary is full, it can only have **{max}** words. Remove some with **/dictionary_remove**.',
+  'command.dictionary.add.success': 'From now on I will read **{word}** as **{replacement}**.',
+  'command.dictionary.remove.not_found': '**{word}** is not in the dictionary.',
+  'command.dictionary.remove.success': 'Removed **{word}** from the dictionary.',
+  'command.dictionary.list.empty': 'The dictionary is empty. Add words with **/dictionary_add**.',
+  'command.dictionary.list.embed.title': 'Dictionary of this server ({count})',
 
   'command.help.embed.title': 'Text-to-Speech Help Message',
   'command.help.links.bug': 'Spotted a bug? Report it!',
@@ -132,6 +145,10 @@ const COMMAND = {
   'command.timeout.success': 'I will now leave from the voice channel after **{timeout}** minutes of inactivity.'
 };
 
+const TTS = {
+  'tts.who_said': '{name} said'
+};
+
 const CHANNEL_COMMANDS = {
   'channel_commands.set.success': 'You have successfully changed the provider for this channel to **{name}**.',
 
@@ -175,5 +192,6 @@ module.exports = {
   ...APP,
   ...ERROR,
   ...COMMAND,
-  ...CHANNEL_COMMANDS
+  ...CHANNEL_COMMANDS,
+  ...TTS
 };

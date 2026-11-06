@@ -30,10 +30,23 @@ const COMMAND = {
   'command.say.success': 'Je dirai ça maintenant.',
   'command.say.joined.withrequest': "J'ai rejoint le canal vocal {channel}.",
   'command.say.joined': "J'ai rejoint le canal vocal {channel}.",
+  'command.say.empty': 'Il ne reste rien à dire après avoir retiré les mentions, liens et emojis.',
 
   'command.stop.no_connection': 'Je ne suis pas dans un canal vocal.',
   'command.stop.different_channel': "Vous devez être dans un mon canal vocal pour m'arrêter.",
   'command.stop.success': "J'ai quitté le canal vocal {channel}.",
+
+  'command.skip.different_channel': 'Vous devez être dans mon canal vocal pour passer des messages.',
+  'command.skip.nothing': 'Je ne dis rien en ce moment.',
+  'command.skip.success': 'Message actuel passé.',
+
+  'command.dictionary.add.invalid': 'Le mot et son remplacement ne peuvent pas être vides.',
+  'command.dictionary.add.full': 'Le dictionnaire est plein, il ne peut contenir que **{max}** mots. Retirez-en avec **/dictionary_remove**.',
+  'command.dictionary.add.success': 'Désormais, je lirai **{word}** comme **{replacement}**.',
+  'command.dictionary.remove.not_found': "**{word}** n'est pas dans le dictionnaire.",
+  'command.dictionary.remove.success': "J'ai retiré **{word}** du dictionnaire.",
+  'command.dictionary.list.empty': 'Le dictionnaire est vide. Ajoutez des mots avec **/dictionary_add**.',
+  'command.dictionary.list.embed.title': 'Dictionnaire de ce serveur ({count})',
 
   'command.help.embed.title': "Message d'aide Text-to-Speech",
   'command.help.links.bug': 'Vous avez repéré un bug ? Signalez-le !',
@@ -132,6 +145,10 @@ const COMMAND = {
   'command.timeout.success': "Je quitterai le canal vocal après de **{timeout}** minutes d'inactivité."
 };
 
+const TTS = {
+  'tts.who_said': '{name} a dit'
+};
+
 const CHANNEL_COMMANDS = {
   'channel_commands.set.success': 'Vous avez changé le fournisseur pour ce canal à **{name}**.',
 
@@ -175,5 +192,6 @@ module.exports = {
   ...APP,
   ...ERROR,
   ...COMMAND,
-  ...CHANNEL_COMMANDS
+  ...CHANNEL_COMMANDS,
+  ...TTS
 };

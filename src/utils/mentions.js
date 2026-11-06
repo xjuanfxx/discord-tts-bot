@@ -8,16 +8,18 @@ const USERS_PATTERN = /<@!?(\d+)>/g;
 const CHANNELS_PATTERN = /<#(\d+)>/g;
 const ROLES_PATTERN = /<@&(\d+)>/g;
 
-const cleanMemberMentions = (message) => {
-  return message.replace(USERS_PATTERN, '');
+// Mentions are replaced by the name of what they point to so the TTS reads "Juan" instead of nothing.
+// If the entity is not cached (or no cache is given) the mention is simply removed.
+const cleanMemberMentions = (message, members) => {
+  return message.replace(USERS_PATTERN, (_, id) => members?.get(id)?.displayName ?? '');
 };
 
-const cleanChannelMentions = (message) => {
-  return message.replace(CHANNELS_PATTERN, '');
+const cleanChannelMentions = (message, channels) => {
+  return message.replace(CHANNELS_PATTERN, (_, id) => channels?.get(id)?.name ?? '');
 };
 
-const cleanRoleMentions = (message) => {
-  return message.replace(ROLES_PATTERN, '');
+const cleanRoleMentions = (message, roles) => {
+  return message.replace(ROLES_PATTERN, (_, id) => roles?.get(id)?.name ?? '');
 };
 
 const cleanEmojis = (message) => {
@@ -38,6 +40,9 @@ const cleanLinks = (message) => {
  * Cleans a message before sending it to the TTS.
  * @param {string} message
  * @param {object} options
+ * @param {Collection} [options.members] Used to read user mentions by their display name.
+ * @param {Collection} [options.channels] Used to read channel mentions by their name.
+ * @param {Collection} [options.roles] Used to read role mentions by their name.
  * @param {boolean} [options.readEmojis] Whether emojis should be replaced by their name instead of removed.
  * @param {string} [options.language] The TTS language, used to pick the language of the emoji names.
  */

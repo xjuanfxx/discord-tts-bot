@@ -3,7 +3,9 @@ const { ExtendedClient } = require('@greencoast/discord.js-extended');
 const ProviderManager = require('../tts/providers/ProviderManager');
 const TTSPlayer = require('../tts/TTSPlayer');
 const CachedTTSSettings = require('../tts/CachedTTSSettings');
+const GuildDictionary = require('../tts/GuildDictionary');
 const TTSChannelHandler = require('../tts/TTSChannelHandler');
+const VoiceActivityHandler = require('../tts/VoiceActivityHandler');
 const Scheduler = require('../Scheduler');
 
 class TTSClient extends ExtendedClient {
@@ -15,7 +17,9 @@ class TTSClient extends ExtendedClient {
 
     this.providerManager = new ProviderManager(this);
     this.ttsSettings = new CachedTTSSettings(this);
+    this.guildDictionary = new GuildDictionary(this);
     this.ttsChannelHandler = new TTSChannelHandler(this);
+    this.voiceActivityHandler = new VoiceActivityHandler(this);
   }
 
   async initializeDependencies() {
@@ -33,6 +37,7 @@ class TTSClient extends ExtendedClient {
   deleteDependenciesForGuild(guild) {
     this.ttsPlayers.delete(guild.id);
     this.disconnectSchedulers.delete(guild.id);
+    this.guildDictionary.delete(guild);
   }
 
   getTTSPlayer(guild) {

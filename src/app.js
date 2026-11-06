@@ -28,7 +28,9 @@ const config = new ConfigProvider({
     ENABLE_KEEP_ALIVE: false,
     ENABLE_WHO_SAID: false,
     MAX_MESSAGE_LENGTH: 0,
-    ENABLE_EMOJI_NAMES: true
+    ENABLE_EMOJI_NAMES: true,
+    LEAVE_WHEN_ALONE: true,
+    TTS_CHANNEL_IGNORE_PREFIX: '//'
   },
   types: {
     TOKEN: 'string',
@@ -44,7 +46,9 @@ const config = new ConfigProvider({
     ENABLE_KEEP_ALIVE: 'boolean',
     ENABLE_WHO_SAID: 'boolean',
     MAX_MESSAGE_LENGTH: 'number',
-    ENABLE_EMOJI_NAMES: 'boolean'
+    ENABLE_EMOJI_NAMES: 'boolean',
+    LEAVE_WHEN_ALONE: 'boolean',
+    TTS_CHANNEL_IGNORE_PREFIX: ['string', 'null']
   },
   customValidators: {
     PROVIDER_TYPE: (value) => {
@@ -99,6 +103,7 @@ client.registry
     ['all-tts', 'All TTS Commands'],
     ['amazon-tts', 'Amazon TTS Commands'],
     ['config', 'Configuration Commands'],
+    ['dictionary', 'Dictionary Commands'],
     ['google-tts', 'Google TTS Commands'],
     ['other-tts', 'Other TTS Commands'],
     ['misc', 'Miscellaneous Commands'],
@@ -133,6 +138,10 @@ client.once('ready', async () => {
 
   if (config.get('ENABLE_TTS_CHANNELS')) {
     client.ttsChannelHandler.initialize();
+  }
+
+  if (config.get('LEAVE_WHEN_ALONE')) {
+    client.voiceActivityHandler.initialize();
   }
 
   if (config.get('ENABLE_KEEP_ALIVE')) {

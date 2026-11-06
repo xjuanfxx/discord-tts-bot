@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 const logger = require('@greencoast/logger');
-const { cleanMessage } = require('../../utils/mentions');
+const { buildTTSText } = require('../../utils/tts-text');
 const { getCantConnectToChannelReason } = require('../../utils/channel');
 
 class TTSChannelHandler {
@@ -14,7 +14,12 @@ class TTSChannelHandler {
 
   async handleMessage(message) {
     try {
-      if (message.author.bot || !message.guild || message.content?.length < 1) {
+      if (message.author.bot || !message.guild || !message.member || !message.content) {
+        return;
+      }
+
+      const ignorePrefix = this.client.config.get('TTS_CHANNEL_IGNORE_PREFIX');
+      if (ignorePrefix && message.content.startsWith(ignorePrefix)) {
         return;
       }
 
@@ -25,7 +30,7 @@ class TTSChannelHandler {
 
       return await this.handleSay(message, channelSettings);
     } catch (error) {
-      logger.error(`Something happened when handling the TTS channel ${message.channel.name} with message from ${message.member.displayName}`);
+      logger.error(`Something happened when handling the TTS channel ${message.channel?.name} with message from ${message.member?.displayName ?? message.author?.tag}`);
       logger.error(error);
     }
   }
@@ -38,24 +43,22 @@ class TTSChannelHandler {
     const settings = await this.client.ttsSettings.getCurrentForChannel(message.channel);
     const extras = settings[channelSettings.provider];
 
-    const { members: { me: { voice: myVoice } }, name: guildName, members, channels, roles } = message.guild;
+    const { members: { me: { voice: myVoice } }, name: guildName } = message.guild;
     const { channel: memberChannel } = message.member.voice;
     const myChannel = myVoice?.channel;
 
-    const messageIntro = this.client.config.get('ENABLE_WHO_SAID') ? `${message.member.displayName} said ` : '';
     const maxLength = this.client.config.get('MAX_MESSAGE_LENGTH');
     const rawContent = maxLength > 0 && message.content.length > maxLength ?
       message.content.slice(0, maxLength) :
       message.content;
-    const textToSay = cleanMessage(`${messageIntro}${rawContent}`, {
-      members: members.cache,
-      channels: channels.cache,
-      roles: roles.cache,
-      readEmojis: this.client.config.get('ENABLE_EMOJI_NAMES'),
-      language: extras?.language
+    const textToSay = await buildTTSText(this.client, {
+      member: message.member,
+      content: rawContent,
+      extras,
+      mentionedMembers: message.mentions?.members
     });
 
-    if (textToSay.trim().length === 0) {
+    if (textToSay.length === 0) {
       return;
     }
 

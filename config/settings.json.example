@@ -12,5 +12,7 @@
   "enable_keep_alive": false,
   "enable_who_said": false,
   "max_message_length": 0,
-  "enable_emoji_names": true
+  "enable_emoji_names": true,
+  "leave_when_alone": true,
+  "tts_channel_ignore_prefix": "//"
 }
