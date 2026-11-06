@@ -33,7 +33,7 @@ class Scheduler {
   }
 
   refresh() {
-    this.timeoutHandle.refresh();
+    this.timeoutHandle?.refresh();
     this.client.emit('debug', 'Scheduler has refreshed.');
   }
 
@@ -43,8 +43,12 @@ class Scheduler {
 
   async updateTimeout(timeout) {
     this.timeout = timeout;
-    this.stop();
-    this.start();
+
+    // Only restart the timer if the bot is currently connected, otherwise it would "leave" a channel it is not in.
+    if (this.isAlive()) {
+      this.stop();
+      this.start();
+    }
 
     await this.client.dataProvider.set(this.guild, 'disconnectTimeout', timeout);
   }

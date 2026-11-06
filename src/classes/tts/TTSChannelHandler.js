@@ -1,11 +1,13 @@
 /* eslint-disable max-statements */
 const logger = require('@greencoast/logger');
 const { buildTTSText, getMaxMessageLength } = require('../../utils/tts-text');
-const { getCantConnectToChannelReason } = require('../../utils/channel');
+const { Collection } = require('discord.js');
+const { ensureVoiceConnection } = require('../../utils/channel');
 
 class TTSChannelHandler {
   constructor(client) {
     this.client = client;
+    this.warningCooldowns = new Collection();
   }
 
   initialize() {
@@ -38,17 +40,12 @@ class TTSChannelHandler {
   async handleSay(message, channelSettings) {
     const localizer = this.client.localizer.getLocalizer(message.guild);
     const ttsPlayer = this.client.getTTSPlayer(message.guild);
-    const connection = ttsPlayer.voice.getConnection();
 
     const settings = await this.client.ttsSettings.getCurrentForChannel(message.channel);
     const extras = settings[channelSettings.provider];
 
-    const { members: { me: { voice: myVoice } }, name: guildName } = message.guild;
-    const { channel: memberChannel } = message.member.voice;
-    const myChannel = myVoice?.channel;
-
     if (!this.client.providerManager.getProvider(channelSettings.provider).isAvailable()) {
-      return message.reply(localizer.t('command.say.provider_unavailable', { name: channelSettings.provider }));
+      return this.replyWarning(message, localizer.t('command.say.provider_unavailable', { name: channelSettings.provider }));
     }
 
     const maxLength = await getMaxMessageLength(this.client, message.guild, channelSettings.provider);
@@ -66,28 +63,37 @@ class TTSChannelHandler {
       return;
     }
 
-    if (!memberChannel) {
-      return message.reply(localizer.t('command.say.no_channel'));
+    const { error, joined, channel } = await ensureVoiceConnection(ttsPlayer, message.member);
+    if (error) {
+      return this.replyWarning(message, localizer.t(error));
     }
 
-    if (connection) {
-      if (myChannel !== memberChannel) {
-        return message.reply(localizer.t('command.say.different_channel'));
-      }
-
-      return ttsPlayer.say(textToSay, channelSettings.provider, extras);
+    if (joined) {
+      await message.reply(localizer.t('command.say.joined', { channel: channel.toString() }));
     }
 
-    const cantConnectReason = getCantConnectToChannelReason(memberChannel);
-    if (cantConnectReason) {
-      return message.reply(localizer.t(cantConnectReason));
-    }
-
-    await ttsPlayer.voice.connect(memberChannel);
-    logger.info(`Joined ${memberChannel.name} in ${guildName}.`);
-    await message.reply(localizer.t('command.say.joined', { channel: memberChannel.toString() }));
     return ttsPlayer.say(textToSay, channelSettings.provider, extras);
   }
+
+  /**
+   * Replies with a warning, at most once every WARNING_COOLDOWN per user. In TTS channels every message
+   * triggers the bot, so without this someone chatting outside of a voice channel would get a reply to
+   * every single message (spam and needless API calls / rate limits).
+   */
+  replyWarning(message, content) {
+    const now = Date.now();
+    const last = this.warningCooldowns.get(message.author.id);
+
+    if (last && now - last < TTSChannelHandler.WARNING_COOLDOWN) {
+      return;
+    }
+
+    this.warningCooldowns.set(message.author.id, now);
+    this.warningCooldowns.sweep((time) => now - time >= TTSChannelHandler.WARNING_COOLDOWN);
+    return message.reply(content);
+  }
 }
+
+TTSChannelHandler.WARNING_COOLDOWN = 30 * 1000;
 
 module.exports = TTSChannelHandler;

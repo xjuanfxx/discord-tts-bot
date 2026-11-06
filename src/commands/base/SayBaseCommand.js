@@ -2,8 +2,7 @@
 const { SlashCommand } = require('@greencoast/discord.js-extended');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
-const logger = require('@greencoast/logger');
-const { getCantConnectToChannelReason } = require('../../utils/channel');
+const { ensureVoiceConnection } = require('../../utils/channel');
 const { buildTTSText, getMaxMessageLength } = require('../../utils/tts-text');
 
 class SayBaseCommand extends SlashCommand {
@@ -33,7 +32,6 @@ class SayBaseCommand extends SlashCommand {
 
     const localizer = this.client.localizer.getLocalizer(interaction.guild);
     const ttsPlayer = this.client.getTTSPlayer(interaction.guild);
-    const connection = ttsPlayer.voice.getConnection();
 
     const currentSettings = await this.client.ttsSettings.getCurrent(interaction);
     const providerName = this.getProviderName(currentSettings);
@@ -43,10 +41,6 @@ class SayBaseCommand extends SlashCommand {
       await interaction.editReply(localizer.t('command.say.provider_unavailable', { name: providerName }));
       return;
     }
-
-    const { members: { me: { voice: myVoice } }, name: guildName } = interaction.guild;
-    const { channel: memberChannel } = interaction.member.voice;
-    const myChannel = myVoice?.channel;
 
     const userMessage = interaction.options.getString('message');
 
@@ -63,30 +57,15 @@ class SayBaseCommand extends SlashCommand {
       return;
     }
 
-    if (!memberChannel) {
-      await interaction.editReply(localizer.t('command.say.no_channel'));
+    const { error, joined, channel } = await ensureVoiceConnection(ttsPlayer, interaction.member);
+    if (error) {
+      await interaction.editReply(localizer.t(error));
       return;
     }
 
-    if (connection) {
-      if (myChannel !== memberChannel) {
-        await interaction.editReply(localizer.t('command.say.different_channel'));
-        return;
-      }
-
-      await interaction.editReply(localizer.t('command.say.success', { request: userMessage }));
-      return ttsPlayer.say(message, providerName, extras);
-    }
-
-    const cantConnectReason = getCantConnectToChannelReason(memberChannel);
-    if (cantConnectReason) {
-      await interaction.editReply(localizer.t(cantConnectReason));
-      return;
-    }
-
-    await ttsPlayer.voice.connect(memberChannel);
-    logger.info(`Joined ${memberChannel.name} in ${guildName}.`);
-    await interaction.editReply(localizer.t('command.say.joined.withrequest', { channel: memberChannel.toString(), request: userMessage }));
+    await interaction.editReply(joined ?
+      localizer.t('command.say.joined.withrequest', { channel: channel.toString(), request: userMessage }) :
+      localizer.t('command.say.success', { request: userMessage }));
     return ttsPlayer.say(message, providerName, extras);
   }
 }

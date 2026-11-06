@@ -14,17 +14,17 @@ class TTSPlayer {
     this.speaking = false;
     this.currentMessageId = null;
     this.nextMessageId = 0;
-    this.voice = new VoiceManager(guild);
+    this.voice = new VoiceManager(guild, { onDestroy: () => this.reset() });
 
     this.initializePlayer();
     this.initializeScheduler();
   }
 
   initializePlayer() {
+    // The player always goes to 'idle' after an 'error', so the next message is played from there.
+    // Playing it here as well would skip a message.
     this.voice.player.on('error', (error) => {
-      logger.error(error);
-      this.speaking = false;
-      this.play();
+      logger.error(`Audio player error in guild ${this.guild.name}: ${error.message}`);
     });
 
     this.voice.player.on('idle', () => {
@@ -38,7 +38,7 @@ class TTSPlayer {
   initializeScheduler() {
     this.disconnectScheduler.set(() => {
       const channel = this.stop();
-      logger.warn(`Left ${channel.name} from ${this.guild.name} due to inactivity.`);
+      logger.info(`Left ${channel.name} from ${this.guild.name} due to inactivity.`);
     });
   }
 
@@ -77,7 +77,9 @@ class TTSPlayer {
     this.currentMessageId = payload.messageId;
     const provider = this.providerManager.getProvider(payload.providerName);
 
-    logger.info(provider.getPlayLogMessage(payload, this.guild));
+    // Message contents are only logged in debug mode, normal logs shouldn't keep what users say.
+    logger.info(`(${provider.constructor.NAME}): Playing a message (${payload.sentence.length} characters) in guild ${this.guild.name}.`);
+    this.client.emit('debug', provider.getPlayLogMessage(payload, this.guild));
 
     this.speaking = true;
     this.voice.play(createAudioResource(payload.resource, {
@@ -104,18 +106,30 @@ class TTSPlayer {
     return true;
   }
 
+  /**
+   * Stops speaking and leaves the voice channel.
+   * @returns {Discord.VoiceBasedChannel|{ name: string }} The channel that was left.
+   */
   stop() {
-    const { channel } = this.guild.members.me.voice;
+    const channel = this.guild.members.me?.voice?.channel;
 
+    this.voice.disconnect();
+    this.reset();
+
+    return channel || { name: 'null' };
+  }
+
+  /**
+   * Clears the queue and the player state. Called whenever the voice connection is destroyed,
+   * no matter the reason (stop, inactivity, kicked from the channel...).
+   */
+  reset() {
     this.stopDisconnectScheduler();
 
     this.queue.clear();
     this.speaking = false;
     this.currentMessageId = null;
-    this.voice.disconnect();
     this.voice.player.stop(true);
-
-    return channel || { name: 'null' };
   }
 
   startDisconnectScheduler() {

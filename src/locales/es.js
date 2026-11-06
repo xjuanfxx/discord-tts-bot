@@ -6,7 +6,9 @@ const ERROR = {
   'error.channel.not_viewable': 'No puedo ver tu canal de voz. ¿Tengo los suficientes permisos para verlo?',
   'error.channel.full': 'Tu canal de voz está lleno.',
   'error.channel.not_joinable': 'No puedo unirme a tu canal de voz. ¿Tengo los suficientes permisos para unirme?',
-  'error.channel.not_speakable': 'No puedo hablar en tu canal de voz. ¿Tengo los suficientes permisos para hablar en él?'
+  'error.channel.not_speakable': 'No puedo hablar en tu canal de voz. ¿Tengo los suficientes permisos para hablar en él?',
+  'error.channel.server_muted': 'Un moderador me silenció en el servidor, no puedo hablar hasta que me quiten el silencio.',
+  'error.channel.connect_failed': 'No pude conectarme a tu canal de voz, inténtalo de nuevo en un momento.'
 };
 
 const COMMAND = {

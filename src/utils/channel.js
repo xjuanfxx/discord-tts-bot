@@ -1,9 +1,11 @@
+const logger = require('@greencoast/logger');
+
 const getCantConnectToChannelReason = (channel) => {
   if (!channel.viewable) {
     return 'error.channel.not_viewable';
   }
 
-  if (channel.full) {
+  if (channel.full && !channel.joinable) {
     return 'error.channel.full';
   }
 
@@ -16,6 +18,59 @@ const getCantConnectToChannelReason = (channel) => {
   }
 };
 
+const isServerMuted = (guild) => {
+  return !!guild.members.me?.voice?.serverMute;
+};
+
+/**
+ * Makes sure the bot is in the same voice channel as the member, joining it if needed.
+ * @param {TTSPlayer} ttsPlayer
+ * @param {Discord.GuildMember} member
+ * @returns {Promise<{ error?: string, joined?: boolean, channel?: Discord.VoiceBasedChannel }>}
+ * error is a locale key to reply with, joined is true if the bot just joined the channel.
+ */
+const ensureVoiceConnection = async (ttsPlayer, member) => {
+  const { guild } = member;
+  const memberChannel = member.voice.channel;
+
+  if (!memberChannel) {
+    return { error: 'command.say.no_channel' };
+  }
+
+  if (ttsPlayer.voice.getConnection()) {
+    if (guild.members.me?.voice?.channelId !== memberChannel.id) {
+      return { error: 'command.say.different_channel' };
+    }
+
+    if (isServerMuted(guild)) {
+      return { error: 'error.channel.server_muted' };
+    }
+
+    return { joined: false, channel: memberChannel };
+  }
+
+  const cantConnectReason = getCantConnectToChannelReason(memberChannel);
+  if (cantConnectReason) {
+    return { error: cantConnectReason };
+  }
+
+  try {
+    await ttsPlayer.voice.connect(memberChannel);
+  } catch (error) {
+    logger.error(error.message);
+    return { error: 'error.channel.connect_failed' };
+  }
+
+  logger.info(`Joined ${memberChannel.name} in ${guild.name}.`);
+
+  if (isServerMuted(guild)) {
+    return { error: 'error.channel.server_muted' };
+  }
+
+  return { joined: true, channel: memberChannel };
+};
+
 module.exports = {
-  getCantConnectToChannelReason
+  getCantConnectToChannelReason,
+  ensureVoiceConnection
 };

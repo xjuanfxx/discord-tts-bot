@@ -35,6 +35,9 @@ class TTSClient extends ExtendedClient {
   }
 
   deleteDependenciesForGuild(guild) {
+    // Leave the voice channel and clear the timers, otherwise they would fire for a guild we're no longer in.
+    this.getTTSPlayer(guild)?.stop();
+    this.voiceActivityHandler.cancelLeave(guild);
     this.ttsPlayers.delete(guild.id);
     this.disconnectSchedulers.delete(guild.id);
     this.guildDictionary.delete(guild);

@@ -6,7 +6,9 @@ const ERROR = {
   'error.channel.not_viewable': 'I cannot see your voice channel. Do I have enough permissions to view it?',
   'error.channel.full': 'Your voice channel is full.',
   'error.channel.not_joinable': 'I cannot join your voice channel. Do I have enough permissions to join it?',
-  'error.channel.not_speakable': 'I cannot speak in your voice channel. Do I have enough permissions to speak in it?'
+  'error.channel.not_speakable': 'I cannot speak in your voice channel. Do I have enough permissions to speak in it?',
+  'error.channel.server_muted': 'A moderator has server muted me, I cannot speak until I am unmuted.',
+  'error.channel.connect_failed': 'I could not connect to your voice channel, please try again in a moment.'
 };
 
 const COMMAND = {

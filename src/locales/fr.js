@@ -6,7 +6,9 @@ const ERROR = {
   'error.channel.not_viewable': "Je ne peux pas voir votre canal vocal. Est-ce-que j'ai les permissions suffisantes pour le voir ?",
   'error.channel.full': "Votre canal vocal n'a plus d'espace.",
   'error.channel.not_joinable': "Je ne peux pas rentrer dans votre canal vocal. Est-ce-que j'ai les permissions suffisantes pour y rentrer ?",
-  'error.channel.not_speakable': "Je ne peux pas parler dans votre canal vocal. Est-ce-que j'ai les permissions suffisantes pour y parler ?"
+  'error.channel.not_speakable': "Je ne peux pas parler dans votre canal vocal. Est-ce-que j'ai les permissions suffisantes pour y parler ?",
+  'error.channel.server_muted': "Un modérateur m'a rendu muet sur le serveur, je ne peux pas parler tant que je suis muet.",
+  'error.channel.connect_failed': "Je n'ai pas pu me connecter à votre canal vocal, réessayez dans un instant."
 };
 
 const COMMAND = {
