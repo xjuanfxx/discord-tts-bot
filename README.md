@@ -126,9 +126,10 @@ At the bottom a link should show up, access this link to invite your bot. You sh
 
 ## Configuration
 
-Inside the `config` folder, rename the file *settings.json.example* to *settings.json* and edit the file with your own Discord Token and other settings. If you don't have a discord token yet, you can see a guide on how to create it [here](https://github.com/moonstar-x/discord-downtime-notifier/wiki).
+Inside the `config` folder, rename the file *settings.json.example* to *settings.json* and edit it with your own Discord token and other settings. If you don't have a Discord token yet, see [Creating your Bot Token](#creating-your-bot-token).
 
-Your file should look like this.
+<details>
+<summary>Full <code>settings.json</code> example</summary>
 
 ```json
 {
@@ -161,40 +162,50 @@ Your file should look like this.
 }
 ```
 
-You may also configure these options with environment variables. The settings set with the environment variables will take higher precedence than the ones in the config JSON file.
+</details>
 
-This table contains all the configuration settings you may specify with both environment variables and the JSON config file.
+Every setting can also be set with an environment variable: `DISCORD_` + the setting in uppercase (e.g. `max_message_length` → `DISCORD_MAX_MESSAGE_LENGTH`). Environment variables take precedence over the JSON file. Only `token` is required.
 
-| Environment Variable               | JSON Property                | Required                    | Type                       | Description                                                                                                                                                                                                                                                                                                                                                                          |
-|------------------------------------|------------------------------|-----------------------------|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DISCORD_TOKEN                      | `token`                      | Yes.                        | `string`                   | The bot's token.                                                                                                                                                                                                                                                                                                                                                                     |
-| DISCORD_PREFIX                     | `prefix`                     | No. (Defaults to: `$`)      | `string`                   | **Deprecated**: The bot's prefix. A prefix is no longer necessary because this bot uses the all new interactions (slash commands).                                                                                                                                                                                                                                                   |
-| DISCORD_OWNER_ID                   | `owner_id`                   | No. (Defaults to: `null`)   | `string` or `null`         | The ID of the bot's owner.                                                                                                                                                                                                                                                                                                                                                           |
-| DISCORD_OWNER_REPORTING            | `owner_reporting`            | No. (Defaults to: `false`)  | `boolean`                  | Whether the bot should send error reports to the owner via DM when a command errors.                                                                                                                                                                                                                                                                                                 |
-| DISCORD_PRESENCE_REFRESH_INTERVAL  | `presence_refresh_interval`  | No. (Defaults to: `900000`) | `number` or `null`         | The time interval in milliseconds in which the bot updates its presence. If set to `null` the presence auto update will be disabled.                                                                                                                                                                                                                                                 |
-| DISCORD_DEFAULT_DISCONNECT_TIMEOUT | `default_disconnect_timeout` | No. (Defaults to: `5`)      | `number` or `null`         | The time it takes the bot to leave a voice channel when inactive by default on all servers. This setting can be customised per server and this will be used if a server has not set their own value.                                                                                                                                                                                 |
-| DISCORD_TESTING_GUILD_ID           | `testing_guild_id`           | No. (Defaults to: `null`)   | `string` or `null`         | The ID of the testing guild. You do not need to set this to anything if you're not planning on developing the bot.                                                                                                                                                                                                                                                                   |
-| DISCORD_PROVIDER_TYPE              | `provider_type`              | No. (Defaults to: `level`)  | Can be: `level` or `redis` | The type of data provider to use. [Level](https://github.com/google/leveldb) is a file based key-value store whereas [Redis](https://redis.io/) is a cache service. If you plan on just hosting the bot for a small server you should choose `level`, if you plan on sharding the client `redis` can be a better choice.                                                             |
-| DISCORD_REDIS_URL                  | `redis_url`                  | No. (Defaults to: `null`)   | `string` or `null`         | The URL of the redis service. This is only required if you have set the provider type to `redis`.                                                                                                                                                                                                                                                                                    |
-| DISCORD_ENABLE_TTS_CHANNELS        | `enable_tts_channels`        | No. (Defaults to: `false`)  | `boolean`                  | Whether to enable the message-only TTS for specific channels. With this setting, you can send TTS messages by just sending messages to a channel that you have enabled a provider for. You need the privileged message intent (accessible in the `Bot` page of your bot's application page) for this feature to work properly.                                                       |
-| DISCORD_ENABLE_KEEP_ALIVE          | `enable_keep_alive`          | No. (Defaults to: `false`)  | `boolean`                  | Whether an HTTP server should be started. You should only use this option if you're planning to host the bot on something like Repl.it or Heroku. Additionally, you should use something like UptimeRobot to poll the associated address to keep the bot alive. If you need to specify the port to use you should set the `PORT` environment variable (Heroku uses this by default). |
-| DISCORD_ENABLE_WHO_SAID            | `enable_who_said`            | No. (Defaults to: `false`)  | `boolean`                  | Whether the bot should prepend each TTS message with a 'User said...' (translated to the server's locale). This makes it so the bot speaks the name of the author of every message.                                                                                                                                                                                                                                      |
-| DISCORD_MAX_MESSAGE_LENGTH         | `max_message_length`         | No. (Defaults to: `0`)      | `number`                   | The maximum number of characters allowed per TTS message. Servers can set a lower limit with `/set_max_length`, but never a higher one. If set to `0` the limit is disabled. In TTS channels the message will be truncated; in slash commands the bot will reject the message with an error.                                                                                                                                                                       |
-| DISCORD_ENABLE_EMOJI_NAMES         | `enable_emoji_names`         | No. (Defaults to: `true`)   | `boolean`                  | Whether the bot should read emojis out loud by their name (e.g. 😎 is read as *smiling face with sunglasses*, or *cara sonriendo con gafas de sol* in Spanish) instead of skipping them. The language of the name follows the TTS language. Custom server emojis are read by their name and repeated consecutive emojis are only read once. |
-| DISCORD_LEAVE_WHEN_ALONE           | `leave_when_alone`           | No. (Defaults to: `true`)   | `boolean`                  | Whether the bot should leave its voice channel (15 seconds) after everyone else has left it, instead of waiting for the inactivity timeout. |
-| DISCORD_TTS_CHANNEL_IGNORE_PREFIX  | `tts_channel_ignore_prefix`  | No. (Defaults to: `//`)     | `string` or `null`         | Messages in TTS channels that start with this prefix are not read out loud. Set it to `null` to read every message. |
-| DISCORD_ELEVENLABS_API_KEY         | `elevenlabs_api_key`         | No. (Defaults to: `null`)   | `string` or `null`         | Your [ElevenLabs](https://elevenlabs.io) API key. The ElevenLabs provider and its commands only work when this is set. |
-| DISCORD_ELEVENLABS_VOICE_ID        | `elevenlabs_voice_id`        | No. (Defaults to: `EXAVITQu4vr4xnSDxMaL`) | `string`                   | The voice used when neither the user, the channel nor the server picked one. Use `/elevenlabs_voices` to get the IDs. |
-| DISCORD_ELEVENLABS_MODEL_ID        | `elevenlabs_model_id`        | No. (Defaults to: `eleven_v3`) | `string`                   | The ElevenLabs model. `eleven_flash_v2_5` is faster and cheaper, `eleven_multilingual_v2` / `eleven_v3` sound better. |
-| DISCORD_ELEVENLABS_LANGUAGE        | `elevenlabs_language`        | No. (Defaults to: `en`)     | `string`                   | The language of your voices (e.g. `es`). Only used to read emoji names in the right language. |
-| DISCORD_ELEVENLABS_STABILITY       | `elevenlabs_stability`       | No. (Defaults to: `0.75`)   | `number` (0 - 1)           | Voice stability. |
-| DISCORD_ELEVENLABS_SIMILARITY_BOOST | `elevenlabs_similarity_boost` | No. (Defaults to: `0.75`)   | `number` (0 - 1)           | How close the output should be to the original voice. |
-| DISCORD_ELEVENLABS_STYLE           | `elevenlabs_style`           | No. (Defaults to: `0.3`)    | `number` (0 - 1)           | Style exaggeration. |
-| DISCORD_ELEVENLABS_SPEAKER_BOOST   | `elevenlabs_speaker_boost`   | No. (Defaults to: `true`)   | `boolean`                  | Whether to use speaker boost. |
-| DISCORD_ELEVENLABS_OUTPUT_FORMAT   | `elevenlabs_output_format`   | No. (Defaults to: `mp3_44100_128`) | `string`                   | The audio format requested to ElevenLabs. |
-| DISCORD_ELEVENLABS_MAX_MESSAGE_LENGTH | `elevenlabs_max_message_length` | No. (Defaults to: `0`)      | `number`                   | Max characters per message for ElevenLabs only (it is charged per character). If `0`, `max_message_length` is used. |
+#### General
 
-> If you set `enable_tts_channels` to `true`, you must enable the message content privileged intent in your bot's [application page](https://discord.com/developers/applications/).
+| Setting | Default | Description |
+|---|---|---|
+| `token` | — | **Required.** The bot's token. |
+| `owner_id` | `null` | ID of the bot's owner. |
+| `owner_reporting` | `false` | DM the owner when a command errors. |
+| `presence_refresh_interval` | `900000` | Milliseconds between presence updates. `null` disables it. |
+| `default_disconnect_timeout` | `5` | Minutes of inactivity before leaving the voice channel (servers can change it with `/set_timeout`). |
+| `testing_guild_id` | `null` | Guild to deploy the commands to while developing. |
+| `provider_type` | `level` | Data storage: `level` (a local file, small bots) or `redis` (sharded bots). |
+| `redis_url` | `null` | Redis URL, only for `provider_type: redis`. |
+| `enable_keep_alive` | `false` | Start an HTTP server to keep the bot alive on Repl.it / Heroku (uses the `PORT` env var). |
+| `prefix` | `$` | *Deprecated*, the bot uses slash commands. |
+
+#### Text-to-speech
+
+| Setting | Default | Description |
+|---|---|---|
+| `enable_tts_channels` | `false` | Read every message sent to the channels set with `/set_channel_provider`. Requires the privileged *Message Content* intent. |
+| `tts_channel_ignore_prefix` | `//` | Messages starting with this are not read in TTS channels. `null` reads everything. |
+| `enable_who_said` | `false` | Start each message with *"User said"* (translated to the server's locale). |
+| `enable_emoji_names` | `true` | Read emojis by their name (😎 → *smiling face with sunglasses*) instead of skipping them. |
+| `leave_when_alone` | `true` | Leave the voice channel 15 seconds after everyone else has left. |
+| `max_message_length` | `0` | Max characters per message (`0` = no limit). See [character limits](#character-limits). |
+
+#### ElevenLabs
+
+| Setting | Default | Description |
+|---|---|---|
+| `elevenlabs_api_key` | `null` | Your [ElevenLabs](https://elevenlabs.io) API key. The provider is disabled without it. |
+| `elevenlabs_voice_id` | `EXAVITQu4vr4xnSDxMaL` | Default voice. Get the IDs with `/elevenlabs_voices`. |
+| `elevenlabs_model_id` | `eleven_v3` | Model. `eleven_flash_v2_5` is faster and cheaper. |
+| `elevenlabs_language` | `en` | Language of your voices, used to read emoji names. |
+| `elevenlabs_stability` | `0.75` | Voice stability (0 - 1). |
+| `elevenlabs_similarity_boost` | `0.75` | Similarity to the original voice (0 - 1). |
+| `elevenlabs_style` | `0.3` | Style exaggeration (0 - 1). |
+| `elevenlabs_speaker_boost` | `true` | Use speaker boost. |
+| `elevenlabs_output_format` | `mp3_44100_128` | Audio format requested to ElevenLabs. |
+| `elevenlabs_max_message_length` | `0` | Max characters per message for ElevenLabs only (`0` = use `max_message_length`). |
 
 ## Running on Docker
 
@@ -253,47 +264,37 @@ You can now go back to your app's *Overview*, make sure you disable the *web* dy
 
 ## Usage
 
-Here's a list of all the commands for the bot:
+🔒 = requires *Manage Server* · 📌 = requires *Manage Channels* and `enable_tts_channels`
 
-| Command                                   | Alias     | Description                                                                                         | Required Permissions |
-|-------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------|----------------------|
-| /say \<message\>                          | /s        | Send a TTS message in your voice channel with your own settings or the ones saved for this server.  |                      |
-| /stop                                     | /leave    | Stop the TTS bot and leave the channel.                                                             |                      |
-| /skip                                     |           | Skip the message that is currently being said.                                                      |                      |
-| /default_settings                         |           | Get the default TTS settings currently set for the guild.                                           |                      |
-| /my_settings                              |           | Get the TTS settings you currently have set for yourself.                                           |                      |
-| /set_default_provider \<provider\>        |           | Sets the provider to be used by the say command for the server by default.                          | `MANAGE_GUILD`       |
-| /set_my_provider \<provider\>             |           | Sets the provider to be used by the say command for yourself.                                       |                      |
-| /set_locale \<locale\>                    |           | Sets locale to be used by the bot in this guild.                                                    | `MANAGE_GUILD`       |
-| /set_timeout \<timeout\>                  |           | Sets the timeout for the bot to leave the channel when not in use.                                  | `MANAGE_GUILD`       |
-| /set_max_length \<length\>                |           | Sets the max characters per TTS message in this server (0 removes it). Cannot exceed the config limit. | `MANAGE_GUILD`       |
-| /dictionary_add \<word\> \<replacement\>  |           | Make the bot read a word differently in this server (e.g. `xd` -> `equis de`).                      | `MANAGE_GUILD`       |
-| /dictionary_remove \<word\>               |           | Remove a word from the dictionary of this server.                                                   | `MANAGE_GUILD`       |
-| /dictionary_list                          |           | Show the words the bot reads differently in this server.                                            |                      |
-| /google_langs                             |           | Display a list of the languages supported by the Google Translate provider.                         |                      |
-| /google_say \<message\>                   |           | Send a Google Translate TTS message with multi-language support in your voice channel.              |                      |
-| /google_set_default language \<language\> |           | Sets the language to be used by the say and google_say command by default.                          | `MANAGE_GUILD`       |
-| /google_set_default speed \<speed\>       |           | Sets the speed to be used by the say and google_say command by default.                             | `MANAGE_GUILD`       |
-| /google_set_my language \<language\>      |           | Sets the language to be used by the say and google_say command for yourself.                        |                      |
-| /google_set_my speed \<speed\>            |           | Sets the speed to be used by the say and google_say command for yourself.                           |                      |
-| /help                                     |           | Display a help message with all the available commands.                                             |                      |
-| /aeiou_say \<message\>                    |           | Send an aeiou (sounds like Stephen Hawking) TTS message in your voice channel.                      |                      |
-| /elevenlabs_say \<message\>               |           | Send an ElevenLabs AI TTS message in your voice channel (requires `elevenlabs_api_key`).            |                      |
-| /elevenlabs_voices                        |           | Display a list of the voices available for the ElevenLabs provider.                                 |                      |
-| /elevenlabs_set_my voice \<voice\>        |           | Sets the ElevenLabs voice (name or ID) to be used for yourself.                                     |                      |
-| /elevenlabs_set_default voice \<voice\>   |           | Sets the ElevenLabs voice (name or ID) to be used by default in the server.                         | `MANAGE_GUILD`       |
+#### General
 
-If you have `enable_tts_channels` set to `true`, you will have access to the additional commands:
+| Command | Description |
+|---|---|
+| `/say <message>` | Say a message in your voice channel with your settings (or the server's). |
+| `/skip` | Skip the message that is being said. |
+| `/stop` | Stop and leave the voice channel. |
+| `/my_settings` · `/default_settings` | Show your settings / the server's default settings. |
+| `/set_my_provider <provider>` · `/set_default_provider <provider>` 🔒 | Choose the provider used by `/say` for yourself / the server. |
+| `/set_locale <locale>` 🔒 | Language of the bot's replies (`en`, `es`, `fr`). |
+| `/set_timeout <minutes>` 🔒 | Minutes of inactivity before leaving the channel. |
+| `/set_max_length <length>` 🔒 | Max characters per message in this server (`0` removes it). |
+| `/dictionary_add <word> <replacement>` 🔒 · `/dictionary_remove <word>` 🔒 · `/dictionary_list` | Read words differently in this server (e.g. `xd` → `equis de`). |
+| `/channel_settings` · `/set_channel_provider <provider>` 📌 · `/delete_channel_provider` 📌 | Show / enable / disable TTS for every message sent to this channel. |
+| `/help` | Show all the commands. |
 
-| Command                                   | Description                                                                      | Required Permissions |
-|-------------------------------------------|----------------------------------------------------------------------------------|----------------------|
-| /channel_settings                         | Get the TTS settings associated to this channel (if applies).                    |                      |
-| /delete_channel_provider                  | Disable message-only based TTS on this channel (deletes its saved settings).     | `MANAGE_CHANNELS`    |
-| /set_channel_provider \<provider\>        | Sets the provider to be used by the message-only based TTS on specific channels. | `MANAGE_CHANNELS`    |
-| /google_set_channel language \<language\> | Sets the language to be used by the say and google_say command by default.       | `MANAGE_CHANNELS`    |
-| /google_set_channel speed \<speed\>       | Sets the speed to be used by the say and google_say command by default.          | `MANAGE_CHANNELS`    | 
-| /elevenlabs_set_channel voice \<voice\>   | Sets the ElevenLabs voice to be used by the message-only based TTS on this channel. | `MANAGE_CHANNELS`    |
+#### Providers
 
+Each provider has its own say command, and its settings can be changed for yourself (`_set_my`), the server (`_set_default` 🔒) or a TTS channel (`_set_channel` 📌).
+
+| Provider | Say | Lists | Settings commands | Settings |
+|---|---|---|---|---|
+| Google Translate | `/google_say` | `/google_langs` | `/google_set_my` · `_set_default` · `_set_channel` | `language`, `speed` |
+| Amazon | `/amazon_say` | `/amazon_langs` · `/amazon_voices <language>` | `/amazon_set_my` · `_set_default` · `_set_channel` | `language`, `voice`, `volume`, `rate`, `pitch` |
+| Microsoft | `/ms_say` | `/ms_langs` · `/ms_voices <language>` | `/ms_set_my` · `_set_default` · `_set_channel` | `language`, `voice`, `volume`, `rate`, `pitch` |
+| ElevenLabs | `/elevenlabs_say` | `/elevenlabs_voices` | `/elevenlabs_set_my` · `_set_default` · `_set_channel` | `voice` (name or ID) |
+| aeiou | `/aeiou_say` | — | — | — |
+
+Example: `/google_set_my language es` or `/elevenlabs_set_default voice Antoni`.
 
 ## ElevenLabs
 
@@ -319,67 +320,37 @@ Before a message is spoken, the bot:
 
 ### Character limits
 
-| Limit                           | Set by                       | Applies to                     |
-|---------------------------------|------------------------------|--------------------------------|
-| `max_message_length`            | Bot owner (config)           | Every provider                 |
-| `elevenlabs_max_message_length` | Bot owner (config)           | ElevenLabs (overrides the one above) |
-| `/set_max_length`               | Server admins                | Every provider in that server  |
+| Limit | Set by | Applies to |
+|---|---|---|
+| `max_message_length` | Bot owner (config) | Every provider |
+| `elevenlabs_max_message_length` | Bot owner (config) | ElevenLabs (instead of the one above) |
+| `/set_max_length` | Server admins 🔒 | Every provider in that server |
 
 The effective limit is the lowest of them, so servers can only lower the limit set by the bot owner, never raise it. `0` means no limit.
 
 ## Language Support
 
-Here's a list of all the supported languages by the Google Translate provider:
+<details>
+<summary>Languages supported by the Google Translate provider (47)</summary>
 
-| Language Code | Language Name |
-|---------------|---------------|
-| af            | Afrikaans     |
-| hy            | Armenian      |
-| id            | Indonesian    |
-| bn            | Bengali       |
-| ca            | Catalan       |
-| cs            | Czech         |
-| da            | Danish        |
-| de            | German        |
-| en            | English       |
-| es            | Spanish       |
-| fil           | Filipino      |
-| fr            | French        |
-| hr            | Croatian      |
-| is            | Icelandic     |
-| it            | Italian       |
-| jv            | Javanese      |
-| km            | Khmer         |
-| lv            | Latvian       |
-| hu            | Hungarian     |
-| ml            | Malayalam     |
-| mr            | Marathi       |
-| nl            | Dutch         |
-| ne            | Nepali        |
-| nb            | Norwegian     |
-| pl            | Polish        |
-| pt            | Portuguese    |
-| ro            | Romanian      |
-| si            | Sinhala       |
-| sk            | Slovak        |
-| su            | Sundanese     |
-| sw            | Swahili       |
-| fi            | Finnish       |
-| sv            | Swedish       |
-| ta            | Tamil         |
-| te            | Telugu        |
-| vi            | Vietnamese    |
-| tr            | Turkish       |
-| el            | Greek         |
-| ru            | Russian       |
-| sr            | Serbian       |
-| uk            | Ukranian      |
-| ar            | Arabic        |
-| hi            | Hindi         |
-| th            | Thai          |
-| ko            | Korean        |
-| cmn           | Chinese       |
-| ja            | Japanese      |
+| Code | Language | Code | Language | Code | Language | Code | Language |
+|---|---|---|---|---|---|---|---|
+| `af` | Afrikaans | `fi` | Finnish | `ko` | Korean | `sk` | Slovak |
+| `ar` | Arabic | `fr` | French | `lv` | Latvian | `es` | Spanish |
+| `hy` | Armenian | `de` | German | `ml` | Malayalam | `su` | Sundanese |
+| `bn` | Bengali | `el` | Greek | `mr` | Marathi | `sw` | Swahili |
+| `ca` | Catalan | `hi` | Hindi | `ne` | Nepali | `sv` | Swedish |
+| `cmn` | Chinese | `hu` | Hungarian | `nb` | Norwegian | `ta` | Tamil |
+| `hr` | Croatian | `is` | Icelandic | `pl` | Polish | `te` | Telugu |
+| `cs` | Czech | `id` | Indonesian | `pt` | Portuguese | `th` | Thai |
+| `da` | Danish | `it` | Italian | `ro` | Romanian | `tr` | Turkish |
+| `nl` | Dutch | `ja` | Japanese | `ru` | Russian | `uk` | Ukranian |
+| `en` | English | `jv` | Javanese | `sr` | Serbian | `vi` | Vietnamese |
+| `fil` | Filipino | `km` | Khmer | `si` | Sinhala |  |  |
+
+</details>
+
+Amazon, Microsoft and ElevenLabs have their own lists: use `/amazon_langs`, `/ms_langs` and `/elevenlabs_voices`.
 
 ## Author
 
