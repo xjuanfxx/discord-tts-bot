@@ -9,6 +9,7 @@ const { DISCONNECT_TIMEOUT, WEBSITE_URL } = require('./common/constants');
 const { GatewayIntentBits } = require('discord.js');
 
 const pkg = require('../package.json');
+const { validateConfigFile } = require('./utils/config-file');
 
 const SUPPORTED_PROVIDERS = ['level', 'redis'];
 
@@ -17,6 +18,8 @@ const validateUnitInterval = (name, value) => {
     throw new TypeError(`${name} must be a number between 0 and 1.`);
   }
 };
+
+validateConfigFile();
 
 const config = new ConfigProvider({
   configPath: path.join(__dirname, '../config/settings.json'),

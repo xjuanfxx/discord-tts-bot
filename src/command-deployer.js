@@ -1,6 +1,9 @@
 const path = require('path');
 const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-extended');
 const logger = require('@greencoast/logger');
+const { validateConfigFile } = require('./utils/config-file');
+
+validateConfigFile();
 
 const config = new ConfigProvider({
   env: process.env,
