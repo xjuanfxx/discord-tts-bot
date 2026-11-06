@@ -27,7 +27,8 @@ const config = new ConfigProvider({
     ENABLE_TTS_CHANNELS: false,
     ENABLE_KEEP_ALIVE: false,
     ENABLE_WHO_SAID: false,
-    MAX_MESSAGE_LENGTH: 0
+    MAX_MESSAGE_LENGTH: 0,
+    ENABLE_EMOJI_NAMES: true
   },
   types: {
     TOKEN: 'string',
@@ -42,7 +43,8 @@ const config = new ConfigProvider({
     ENABLE_TTS_CHANNELS: 'boolean',
     ENABLE_KEEP_ALIVE: 'boolean',
     ENABLE_WHO_SAID: 'boolean',
-    MAX_MESSAGE_LENGTH: 'number'
+    MAX_MESSAGE_LENGTH: 'number',
+    ENABLE_EMOJI_NAMES: 'boolean'
   },
   customValidators: {
     PROVIDER_TYPE: (value) => {

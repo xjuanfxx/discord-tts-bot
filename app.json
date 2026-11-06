@@ -60,6 +60,11 @@
       "description": "Whether the bot should prepend each TTS message with a 'User said...'. This makes it so the bot speaks the name of the author of every message.",
       "value": "false",
       "required": false
+    },
+    "DISCORD_ENABLE_EMOJI_NAMES": {
+      "description": "Whether the bot should read emojis out loud by their name (e.g. 😎 -> 'smiling face with sunglasses') instead of skipping them.",
+      "value": "true",
+      "required": false
     }
   }
 }

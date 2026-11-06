@@ -55,7 +55,9 @@ class SayBaseCommand extends SlashCommand {
     const message = cleanMessage(`${messageIntro}${userMessage}`, {
       members: members.cache,
       channels: channels.cache,
-      roles: roles.cache
+      roles: roles.cache,
+      readEmojis: this.client.config.get('ENABLE_EMOJI_NAMES'),
+      language: extras?.language
     });
 
     if (message.trim().length === 0) {

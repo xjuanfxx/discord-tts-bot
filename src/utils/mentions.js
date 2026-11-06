@@ -1,3 +1,5 @@
+const { replaceEmojisWithNames } = require('./emojis');
+
 const UNICODE_EMOJI_PATTERN = /[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu;
 const CUSTOM_EMOJI_PATTERN = /<a?:(.*?):(\d{17,19})>/g;
 const URL_PATTERN = /https?:\/\/[^\s]+/g;
@@ -32,13 +34,20 @@ const cleanLinks = (message) => {
     .replace(URL_PATTERN, '');
 };
 
-const cleanMessage = (message, { members, channels, roles }) => {
+/**
+ * Cleans a message before sending it to the TTS.
+ * @param {string} message
+ * @param {object} options
+ * @param {boolean} [options.readEmojis] Whether emojis should be replaced by their name instead of removed.
+ * @param {string} [options.language] The TTS language, used to pick the language of the emoji names.
+ */
+const cleanMessage = (message, { members, channels, roles, readEmojis = false, language } = {}) => {
   let clean = message;
 
   clean = cleanMemberMentions(clean, members);
   clean = cleanChannelMentions(clean, channels);
   clean = cleanRoleMentions(clean, roles);
-  clean = cleanEmojis(clean);
+  clean = readEmojis ? replaceEmojisWithNames(clean, language) : cleanEmojis(clean);
   clean = cleanLinks(clean);
 
   return clean;
