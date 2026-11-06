@@ -1,7 +1,7 @@
 const path = require('path');
 const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-extended');
 const logger = require('@greencoast/logger');
-const { validateConfigFile } = require('./utils/config-file');
+const { validateConfigFile, treatEmptyValuesAsNull } = require('./utils/config-file');
 const { describeDiscordError } = require('./utils/discord-errors');
 
 validateConfigFile();
@@ -17,6 +17,8 @@ const config = new ConfigProvider({
     ENABLE_TTS_CHANNELS: false
   }
 });
+
+treatEmptyValuesAsNull(config);
 
 const client = new ExtendedClient({
   config,

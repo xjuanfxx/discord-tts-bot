@@ -10,7 +10,7 @@ const { DISCONNECT_TIMEOUT, WEBSITE_URL } = require('./common/constants');
 const { GatewayIntentBits } = require('discord.js');
 
 const pkg = require('../package.json');
-const { validateConfigFile } = require('./utils/config-file');
+const { validateConfigFile, treatEmptyValuesAsNull } = require('./utils/config-file');
 const { describeDiscordError } = require('./utils/discord-errors');
 
 const SUPPORTED_PROVIDERS = ['level', 'redis'];
@@ -101,6 +101,8 @@ const config = new ConfigProvider({
     }
   }
 });
+
+treatEmptyValuesAsNull(config);
 
 // Only request the intents that are actually used. MessageContent is a privileged intent, it is only
 // needed to read the messages of the TTS channels.

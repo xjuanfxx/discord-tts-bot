@@ -64,6 +64,23 @@ const validateConfigFile = () => {
   }
 };
 
+const EMPTY_VALUES = ['', 'null', 'undefined'];
+
+/**
+ * Makes config.get() return null for text values that mean "nothing", like "" or "null" (it's easy to write
+ * "testing_guild_id": "null" instead of null). Otherwise they'd be used as real values, e.g. a guild ID "null".
+ * @param {ConfigProvider} config
+ */
+const treatEmptyValuesAsNull = (config) => {
+  const get = config.get.bind(config);
+
+  config.get = (key) => {
+    const value = get(key);
+    return typeof value === 'string' && EMPTY_VALUES.includes(value.trim().toLowerCase()) ? null : value;
+  };
+};
+
 module.exports = {
-  validateConfigFile
+  validateConfigFile,
+  treatEmptyValuesAsNull
 };
