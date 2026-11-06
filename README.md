@@ -1,6 +1,8 @@
 ![Discord TTS Bot](.github/assets/banner.png)
 
-[![ci-build-status](https://img.shields.io/github/actions/workflow/status/xjuanfxx/discord-tts-bot/ci.yml?branch=master&logo=github)](https://github.com/xjuanfxx/discord-tts-bot/actions)
+[![build](https://img.shields.io/github/actions/workflow/status/xjuanfxx/discord-tts-bot/ci.yml?branch=master&label=build&logo=github)](https://github.com/xjuanfxx/discord-tts-bot/actions/workflows/ci.yml)
+[![node](https://img.shields.io/badge/node-%3E%3D22.12-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![license](https://img.shields.io/github/license/xjuanfxx/discord-tts-bot)](LICENSE)
 [![open-issues-count](https://img.shields.io/github/issues-raw/xjuanfxx/discord-tts-bot?logo=github)](https://github.com/xjuanfxx/discord-tts-bot/issues)
 
 # Discord TTS Bot
