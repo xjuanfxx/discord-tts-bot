@@ -94,6 +94,11 @@
       "description": "Max characters per message for ElevenLabs (0 = use DISCORD_MAX_MESSAGE_LENGTH).",
       "value": "0",
       "required": false
+    },
+    "DISCORD_EDGE_VOICE": {
+      "description": "Default voice for the free Edge provider (e.g. es-MX-DaliaNeural).",
+      "value": "en-US-AriaNeural",
+      "required": false
     }
   }
 }

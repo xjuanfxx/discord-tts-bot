@@ -150,6 +150,17 @@ const COMMAND = {
   'command.elevenlabs.settings.my.voice.success': 'Has cambiado tu voz a **{voice}** con éxito.',
   'command.elevenlabs.settings.default.voice.success': 'Has cambiado la voz por defecto a **{voice}** con éxito.',
 
+  'command.edge.voices.embed.title': 'Voces de Edge para {language}',
+  'command.edge.voices.embed.footer': 'Usa /edge_set_my voice NOMBRE para elegir una para ti.',
+  'command.edge.voices.empty': 'No hay voces de Edge para **{language}**. Prueba un código como es, en o es-MX.',
+  'command.edge.voices.error': 'No pude obtener la lista de voces de Edge, inténtalo más tarde.',
+  'command.edge.settings.voice.unsupported': 'La voz **{voice}** no existe. Usa **/edge_voices** para ver las voces disponibles.',
+  'command.edge.settings.my.success': 'Listo, tu ajuste de Edge "{setting}" ahora es **{value}**.',
+  'command.edge.settings.default.success': 'Listo, el ajuste por defecto de Edge "{setting}" ahora es **{value}**.',
+  'command.edge.setting.voice': 'voz',
+  'command.edge.setting.rate': 'velocidad',
+  'command.edge.setting.pitch': 'tono',
+
   'command.locale.success': 'Has cambiado el idioma del bot a **{locale}**.',
 
   'command.max_length.success': 'Los mensajes en este servidor ahora pueden tener hasta **{length}** caracteres.',
@@ -165,6 +176,7 @@ const TTS = {
 };
 
 const CHANNEL_COMMANDS = {
+  'channel_commands.edge.settings.success': 'Listo, el ajuste de Edge "{setting}" de este canal ahora es **{value}**.',
   'channel_commands.elevenlabs.settings.voice.success': 'Has cambiado la voz de este canal a **{voice}** con éxito.',
 
   'channel_commands.set.success': 'Has cambiado el proveedor de este canal a **{name}** con éxito.',

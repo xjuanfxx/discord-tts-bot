@@ -5,12 +5,13 @@
 
 # Discord TTS Bot
 
-This is a simple TTS Bot that uses the Google Translate TTS API. With this bot you can send Text-to-Speech messages in multiple languages using Google Translate or other TTS engines (Amazon, Microsoft, aeiou and ElevenLabs AI).
+This is a simple TTS Bot that uses the Google Translate TTS API. With this bot you can send Text-to-Speech messages in multiple languages using Google Translate or other TTS engines (Microsoft Edge neural voices, Amazon, Microsoft, aeiou and ElevenLabs AI).
 
 > This is a fork of [moonstar-x/discord-tts-bot](https://github.com/moonstar-x/discord-tts-bot) with extra features and fixes. For the documentation of the original bot, visit its [official page](https://docs.moonstar-x.dev/discord-tts-bot/).
 
 ## What's new in this fork
 
+* **Microsoft Edge provider (free)**: natural sounding neural voices (322 voices, 45 in Spanish) with `/edge_say`, no API key needed. See [Edge](#edge).
 * **ElevenLabs AI provider**: realistic AI voices with `/elevenlabs_say`. Everything (API key, voice, model, voice settings, character limit) is set from the [configuration](#configuration). See [ElevenLabs](#elevenlabs).
 * **Emojis are read out loud by their name** in the language of the voice: 😎 → *"cara sonriendo con gafas de sol"* (es) / *"smiling face with sunglasses"* (en). Custom server emojis are read by their name, skin tones are omitted and repeated emojis are only read once.
 * **Mentions are read by name**: `@Juan`, `#general` and `@Mods` instead of being skipped.
@@ -150,6 +151,7 @@ Inside the `config` folder, rename the file *settings.json.example* to *settings
   "enable_emoji_names": true,
   "leave_when_alone": true,
   "tts_channel_ignore_prefix": "//",
+  "edge_voice": "en-US-AriaNeural",
   "elevenlabs_api_key": "",
   "elevenlabs_voice_id": "EXAVITQu4vr4xnSDxMaL",
   "elevenlabs_model_id": "eleven_flash_v2_5",
@@ -194,6 +196,12 @@ Every setting can also be set with an environment variable: `DISCORD_` + the set
 | `enable_emoji_names` | `true` | Read emojis by their name (😎 → *smiling face with sunglasses*) instead of skipping them. |
 | `leave_when_alone` | `true` | Leave the voice channel 15 seconds after everyone else has left. |
 | `max_message_length` | `0` | Max characters per message (`0` = no limit). See [character limits](#character-limits). |
+
+#### Edge
+
+| Setting | Default | Description |
+|---|---|---|
+| `edge_voice` | `en-US-AriaNeural` | Default voice for the Edge provider (e.g. `es-MX-DaliaNeural`). See `/edge_voices`. |
 
 #### ElevenLabs
 
@@ -294,10 +302,22 @@ Each provider has its own say command, and its settings can be changed for yours
 | Google Translate | `/google_say` | `/google_langs` | `/google_set_my` · `_set_default` · `_set_channel` | `language`, `speed` |
 | Amazon | `/amazon_say` | `/amazon_langs` · `/amazon_voices <language>` | `/amazon_set_my` · `_set_default` · `_set_channel` | `language`, `voice`, `volume`, `rate`, `pitch` |
 | Microsoft | `/ms_say` | `/ms_langs` · `/ms_voices <language>` | `/ms_set_my` · `_set_default` · `_set_channel` | `language`, `voice`, `volume`, `rate`, `pitch` |
+| Edge (free, neural) | `/edge_say` | `/edge_voices [language]` | `/edge_set_my` · `_set_default` · `_set_channel` | `voice` (name or ID), `rate`, `pitch` |
 | ElevenLabs | `/elevenlabs_say` | `/elevenlabs_voices` | `/elevenlabs_set_my` · `_set_default` · `_set_channel` | `voice` (name or ID) |
 | aeiou | `/aeiou_say` | — | — | — |
 
-Example: `/google_set_my language es` or `/elevenlabs_set_default voice Antoni`.
+Example: `/edge_set_my voice Dalia`, `/google_set_my language es` or `/elevenlabs_set_default voice Antoni`.
+
+## Edge
+
+The Edge provider uses the neural voices of Microsoft Edge's *Read Aloud* feature. It's free and doesn't need an API key, and it sounds much more natural than Google Translate.
+
+* See the voices of a language with `/edge_voices es` (or `es-MX`, `en-US`...).
+* Pick one with `/edge_set_my voice Dalia` (the short name or the full ID like `es-MX-DaliaNeural`), or for the whole server with `/edge_set_default voice`.
+* Change how it speaks with `/edge_set_my rate` and `/edge_set_my pitch`.
+* Use it by default with `/set_default_provider Edge`, and set the default voice for every server with `edge_voice` in the config.
+
+> This is not an official API (just like the Google Translate, Amazon and Microsoft providers), so Microsoft could change it at any time. The bot keeps a connection open per voice, so after the first message the audio starts in around half a second.
 
 ## ElevenLabs
 
@@ -353,7 +373,7 @@ The effective limit is the lowest of them, so servers can only lower the limit s
 
 </details>
 
-Amazon, Microsoft and ElevenLabs have their own lists: use `/amazon_langs`, `/ms_langs` and `/elevenlabs_voices`.
+Edge, Amazon, Microsoft and ElevenLabs have their own lists: use `/edge_voices`, `/amazon_langs`, `/ms_langs` and `/elevenlabs_voices`.
 
 ## Author
 

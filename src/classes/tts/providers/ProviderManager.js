@@ -4,6 +4,7 @@ const AeiouProvider = require('./AeiouProvider');
 const AmazonProvider = require('./AmazonProvider');
 const MicrosoftProvider = require('./MicrosoftProvider');
 const ElevenLabsProvider = require('./ElevenLabsProvider');
+const EdgeProvider = require('./EdgeProvider');
 
 class ProviderManager {
   constructor(client) {
@@ -24,7 +25,7 @@ class ProviderManager {
   }
 }
 
-ProviderManager.SUPPORTED_PROVIDERS = [GoogleProvider, AeiouProvider, AmazonProvider, MicrosoftProvider, ElevenLabsProvider];
+ProviderManager.SUPPORTED_PROVIDERS = [GoogleProvider, AeiouProvider, AmazonProvider, MicrosoftProvider, ElevenLabsProvider, EdgeProvider];
 ProviderManager.DEFAULT_PROVIDER = GoogleProvider;
 
 ProviderManager.PROVIDER_FRIENDLY_NAMES = ProviderManager.SUPPORTED_PROVIDERS.reduce((obj, Provider) => {

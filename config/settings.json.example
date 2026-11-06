@@ -15,6 +15,7 @@
   "enable_emoji_names": true,
   "leave_when_alone": true,
   "tts_channel_ignore_prefix": "//",
+  "edge_voice": "en-US-AriaNeural",
   "elevenlabs_api_key": "",
   "elevenlabs_voice_id": "EXAVITQu4vr4xnSDxMaL",
   "elevenlabs_model_id": "eleven_flash_v2_5",

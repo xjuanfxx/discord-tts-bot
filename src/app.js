@@ -42,6 +42,7 @@ const config = new ConfigProvider({
     ENABLE_EMOJI_NAMES: true,
     LEAVE_WHEN_ALONE: true,
     TTS_CHANNEL_IGNORE_PREFIX: '//',
+    EDGE_VOICE: 'en-US-AriaNeural',
     ELEVENLABS_API_KEY: null,
     ELEVENLABS_VOICE_ID: 'EXAVITQu4vr4xnSDxMaL',
     ELEVENLABS_MODEL_ID: 'eleven_flash_v2_5',
@@ -70,6 +71,7 @@ const config = new ConfigProvider({
     ENABLE_EMOJI_NAMES: 'boolean',
     LEAVE_WHEN_ALONE: 'boolean',
     TTS_CHANNEL_IGNORE_PREFIX: ['string', 'null'],
+    EDGE_VOICE: 'string',
     ELEVENLABS_API_KEY: ['string', 'null'],
     ELEVENLABS_VOICE_ID: 'string',
     ELEVENLABS_MODEL_ID: 'string',
@@ -156,7 +158,8 @@ client.registry
     ['other-tts', 'Other TTS Commands'],
     ['misc', 'Miscellaneous Commands'],
     ['ms-tts', 'Microsoft TTS Commands'],
-    ['elevenlabs-tts', 'ElevenLabs TTS Commands']
+    ['elevenlabs-tts', 'ElevenLabs TTS Commands'],
+    ['edge-tts', 'Edge TTS Commands']
   ])
   .registerCommandsIn(path.join(__dirname, './commands/main'));
 

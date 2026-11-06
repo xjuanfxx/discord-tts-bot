@@ -150,6 +150,17 @@ const COMMAND = {
   'command.elevenlabs.settings.my.voice.success': 'You have successfully changed your voice to **{voice}**.',
   'command.elevenlabs.settings.default.voice.success': 'You have successfully changed the default voice to **{voice}**.',
 
+  'command.edge.voices.embed.title': 'Edge voices for {language}',
+  'command.edge.voices.embed.footer': 'Use /edge_set_my voice NAME to pick one for yourself.',
+  'command.edge.voices.empty': 'There are no Edge voices for **{language}**. Try a code like es, en or es-MX.',
+  'command.edge.voices.error': 'I could not get the list of voices from Edge, try again later.',
+  'command.edge.settings.voice.unsupported': 'The voice **{voice}** does not exist. Use **/edge_voices** to check the voices available.',
+  'command.edge.settings.my.success': 'Your Edge {setting} is now **{value}**.',
+  'command.edge.settings.default.success': 'The default Edge {setting} is now **{value}**.',
+  'command.edge.setting.voice': 'voice',
+  'command.edge.setting.rate': 'rate',
+  'command.edge.setting.pitch': 'pitch',
+
   'command.locale.success': "You have changed the bot's locale to **{locale}**.",
 
   'command.max_length.success': 'Messages in this server can now have up to **{length}** characters.',
@@ -165,6 +176,7 @@ const TTS = {
 };
 
 const CHANNEL_COMMANDS = {
+  'channel_commands.edge.settings.success': "This channel's Edge {setting} is now **{value}**.",
   'channel_commands.elevenlabs.settings.voice.success': "You have successfully changed this channel's voice to **{voice}**.",
 
   'channel_commands.set.success': 'You have successfully changed the provider for this channel to **{name}**.',

@@ -34,12 +34,13 @@
     "@greencoast/djs-extended-data-provider-redis": "^1.0.0",
     "@greencoast/logger": "^1.1.1",
     "@snazzah/davey": "^0.1.11",
-    "axios": "^1.7.9",
+    "axios": "1.20.0",
     "deepmerge": "^4.3.1",
     "discord.js": "^14.26.2",
     "emojibase-data": "^17.0.0",
     "google-tts-api": "^2.0.2",
     "level": "^9.0.0",
+    "msedge-tts": "^2.1.1",
     "redis": "^4.7.0",
     "sodium-native": "^5.1.0"
   },
@@ -51,5 +52,9 @@
   "allowScripts": {
     "@discordjs/opus": true,
     "classic-level": true
+  },
+  "overrides": {
+    "ws": "8.22.0",
+    "follow-redirects": "1.16.1"
   }
 }
