@@ -47,5 +47,9 @@
     "eslint": "^8.57.1",
     "eslint-config-greencoast": "^0.0.5",
     "nodemon": "^3.1.9"
+  },
+  "allowScripts": {
+    "@discordjs/opus": true,
+    "classic-level": true
   }
 }
