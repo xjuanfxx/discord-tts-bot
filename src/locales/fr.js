@@ -150,6 +150,10 @@ const COMMAND = {
 
   'command.locale.success': 'Vous avez changée la langue du bot à **{locale}**.',
 
+  'command.max_length.success': 'Les messages de ce serveur peuvent maintenant contenir jusqu\'à **{length}** caractères.',
+  'command.max_length.removed': "Ce serveur n'a plus sa propre limite de caractères.",
+  'command.max_length.capped': 'Notez que le propriétaire du bot a fixé une limite plus basse pour certains fournisseurs : {list}.',
+
   'command.timeout.out_of_range': 'Temps invalide, il doit se trouver entre **{min}** et **{max}**.',
   'command.timeout.success': "Je quitterai le canal vocal après de **{timeout}** minutes d'inactivité."
 };

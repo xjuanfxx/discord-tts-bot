@@ -50,7 +50,7 @@ class SayBaseCommand extends SlashCommand {
 
     const userMessage = interaction.options.getString('message');
 
-    const maxLength = getMaxMessageLength(this.client.config, providerName);
+    const maxLength = await getMaxMessageLength(this.client, interaction.guild, providerName);
     if (maxLength > 0 && userMessage.length > maxLength) {
       await interaction.editReply(localizer.t('command.say.too_long', { max: maxLength }));
       return;

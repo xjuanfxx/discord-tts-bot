@@ -15,6 +15,9 @@ const DISCONNECT_TIMEOUT = {
   MAX: 300
 };
 
+// Upper bound for /set_max_length (Discord messages can't be longer than this anyway).
+const MAX_MESSAGE_LENGTH_LIMIT = 2000;
+
 // Time to wait before leaving a voice channel once the bot is left alone in it.
 const ALONE_LEAVE_DELAY = 15 * 1000;
 
@@ -25,5 +28,6 @@ module.exports = {
   EMBED_FIELD_MAX_SIZE,
   DISCONNECT_TIMEOUT,
   ALONE_LEAVE_DELAY,
+  MAX_MESSAGE_LENGTH_LIMIT,
   WEBSITE_URL
 };

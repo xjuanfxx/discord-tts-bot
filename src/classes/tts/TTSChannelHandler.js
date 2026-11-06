@@ -51,7 +51,7 @@ class TTSChannelHandler {
       return message.reply(localizer.t('command.say.provider_unavailable', { name: channelSettings.provider }));
     }
 
-    const maxLength = getMaxMessageLength(this.client.config, channelSettings.provider);
+    const maxLength = await getMaxMessageLength(this.client, message.guild, channelSettings.provider);
     const rawContent = maxLength > 0 && message.content.length > maxLength ?
       message.content.slice(0, maxLength) :
       message.content;
