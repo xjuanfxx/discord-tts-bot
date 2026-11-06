@@ -1,4 +1,5 @@
 const path = require('path');
+const logger = require('@greencoast/logger');
 const { ConfigProvider } = require('@greencoast/discord.js-extended');
 const { RedisDataProvider } = require('@greencoast/djs-extended-data-provider-redis');
 const { LevelDataProvider } = require('@greencoast/djs-extended-data-provider-level');
@@ -10,6 +11,7 @@ const { GatewayIntentBits } = require('discord.js');
 
 const pkg = require('../package.json');
 const { validateConfigFile } = require('./utils/config-file');
+const { describeDiscordError } = require('./utils/discord-errors');
 
 const SUPPORTED_PROVIDERS = ['level', 'redis'];
 
@@ -177,8 +179,13 @@ client.once('ready', async () => {
   await client.localizer.init();
 
   if (config.get('TESTING_GUILD_ID')) {
-    client.deployer.rest.setToken(config.get('TOKEN'));
-    await client.deployer.deployToTestingGuild();
+    try {
+      client.deployer.rest.setToken(config.get('TOKEN'));
+      await client.deployer.deployToTestingGuild();
+    } catch (error) {
+      // Not fatal, the bot keeps working with the commands that are already deployed.
+      logger.error(`Could not deploy the commands to the testing guild ${config.get('TESTING_GUILD_ID')}: ${describeDiscordError(error)}`);
+    }
   }
 
   if (config.get('ENABLE_TTS_CHANNELS')) {

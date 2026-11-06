@@ -2,6 +2,7 @@ const path = require('path');
 const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-extended');
 const logger = require('@greencoast/logger');
 const { validateConfigFile } = require('./utils/config-file');
+const { describeDiscordError } = require('./utils/discord-errors');
 
 validateConfigFile();
 
@@ -45,7 +46,7 @@ client.on('ready', async () => {
     client.deployer.rest.setToken(config.get('TOKEN'));
     await client.deployer.deployGlobally();
   } catch (error) {
-    logger.error('Something happened when trying to deploy the commands globally.', error);
+    logger.error(`Could not deploy the commands globally: ${describeDiscordError(error)}`);
     process.exit(1);
   }
 });
