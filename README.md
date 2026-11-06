@@ -16,6 +16,7 @@ This is a simple TTS Bot that uses the Google Translate TTS API. With this bot y
 * **Mentions are read by name**: `@Juan`, `#general` and `@Mods` instead of being skipped.
 * **Per-server dictionary**: make the bot read words in a different way, e.g. `xd` → `equis de` (`/dictionary_add`, `/dictionary_remove`, `/dictionary_list`).
 * **Character limits**: a global limit (`max_message_length`), a per-provider limit (`elevenlabs_max_message_length`) and a per-server limit with `/set_max_length` that can never go above the global one.
+* **Low latency**: the audio is generated while the bot joins the channel, the next parts are downloaded and decoded while the current one plays (no gaps), ElevenLabs audio is streamed and messages always play in order.
 * **`/skip`** skips the message that is being said.
 * **Leaves the voice channel when everyone else leaves** (`leave_when_alone`).
 * **Ignore prefix for TTS channels**: messages starting with `//` are not read (`tts_channel_ignore_prefix`).
@@ -151,7 +152,7 @@ Inside the `config` folder, rename the file *settings.json.example* to *settings
   "tts_channel_ignore_prefix": "//",
   "elevenlabs_api_key": "",
   "elevenlabs_voice_id": "EXAVITQu4vr4xnSDxMaL",
-  "elevenlabs_model_id": "eleven_v3",
+  "elevenlabs_model_id": "eleven_flash_v2_5",
   "elevenlabs_language": "en",
   "elevenlabs_stability": 0.75,
   "elevenlabs_similarity_boost": 0.75,
@@ -200,7 +201,7 @@ Every setting can also be set with an environment variable: `DISCORD_` + the set
 |---|---|---|
 | `elevenlabs_api_key` | `""` | Your [ElevenLabs](https://elevenlabs.io) API key. The provider is disabled without it. |
 | `elevenlabs_voice_id` | `EXAVITQu4vr4xnSDxMaL` | Default voice. Get the IDs with `/elevenlabs_voices`. |
-| `elevenlabs_model_id` | `eleven_v3` | Model. `eleven_flash_v2_5` is faster and cheaper. |
+| `elevenlabs_model_id` | `eleven_flash_v2_5` | Model. `eleven_flash_v2_5` is the fastest (best for a TTS bot), `eleven_multilingual_v2` and `eleven_v3` are more expressive but slower. |
 | `elevenlabs_language` | `en` | Language of your voices, used to read emoji names. |
 | `elevenlabs_stability` | `0.75` | Voice stability (0 - 1). |
 | `elevenlabs_similarity_boost` | `0.75` | Similarity to the original voice (0 - 1). |
@@ -309,7 +310,7 @@ The ElevenLabs provider uses [ElevenLabs](https://elevenlabs.io) AI voices. It i
 
 Users can then pick their own voice with `/elevenlabs_set_my voice <name or ID>`, admins can change the server's default with `/elevenlabs_set_default voice` and use ElevenLabs by default with `/set_default_provider`.
 
-The model (`elevenlabs_model_id`) defaults to `eleven_v3`. `eleven_flash_v2_5` is faster and cheaper, which works great for a TTS bot.
+The model (`elevenlabs_model_id`) defaults to `eleven_flash_v2_5`, the one with the lowest latency. `eleven_multilingual_v2` and `eleven_v3` sound more expressive but take noticeably longer to start speaking. The audio is streamed, so the bot starts playing it before ElevenLabs finishes generating it.
 
 ## Text processing
 

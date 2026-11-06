@@ -87,7 +87,7 @@
     },
     "DISCORD_ELEVENLABS_MODEL_ID": {
       "description": "The ElevenLabs model to use.",
-      "value": "eleven_v3",
+      "value": "eleven_flash_v2_5",
       "required": false
     },
     "DISCORD_ELEVENLABS_MAX_MESSAGE_LENGTH": {

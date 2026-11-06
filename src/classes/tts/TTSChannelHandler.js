@@ -63,16 +63,24 @@ class TTSChannelHandler {
       return;
     }
 
-    const { error, joined, channel } = await ensureVoiceConnection(ttsPlayer, message.member);
+    // The audio starts being generated as soon as the checks pass, while the bot joins the channel.
+    let prepared = null;
+    const { error, joined, channel } = await ensureVoiceConnection(ttsPlayer, message.member, () => {
+      prepared = ttsPlayer.prepare(textToSay, channelSettings.provider, extras);
+    });
+
     if (error) {
+      if (prepared) {
+        ttsPlayer.discard(prepared);
+      }
       return this.replyWarning(message, localizer.t(error));
     }
 
+    // Queue it before replying, the reply doesn't have to delay the audio.
+    ttsPlayer.enqueue(prepared);
     if (joined) {
       await message.reply(localizer.t('command.say.joined', { channel: channel.toString() }));
     }
-
-    return ttsPlayer.say(textToSay, channelSettings.provider, extras);
   }
 
   /**

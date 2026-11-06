@@ -28,7 +28,14 @@ class SayBaseCommand extends SlashCommand {
   }
 
   async run(interaction) {
-    await interaction.deferReply();
+    // Don't wait for Discord to acknowledge the interaction before starting, every reply waits for it instead.
+    const deferred = interaction.deferReply();
+    // Avoid an unhandled rejection if something throws before the first reply (reply() still rethrows it).
+    deferred.catch(() => null);
+    const reply = async (content) => {
+      await deferred;
+      return interaction.editReply(content);
+    };
 
     const localizer = this.client.localizer.getLocalizer(interaction.guild);
     const ttsPlayer = this.client.getTTSPlayer(interaction.guild);
@@ -38,7 +45,7 @@ class SayBaseCommand extends SlashCommand {
     const extras = currentSettings[providerName];
 
     if (!this.client.providerManager.getProvider(providerName).isAvailable()) {
-      await interaction.editReply(localizer.t('command.say.provider_unavailable', { name: providerName }));
+      await reply(localizer.t('command.say.provider_unavailable', { name: providerName }));
       return;
     }
 
@@ -46,27 +53,36 @@ class SayBaseCommand extends SlashCommand {
 
     const maxLength = await getMaxMessageLength(this.client, interaction.guild, providerName);
     if (maxLength > 0 && userMessage.length > maxLength) {
-      await interaction.editReply(localizer.t('command.say.too_long', { max: maxLength }));
+      await reply(localizer.t('command.say.too_long', { max: maxLength }));
       return;
     }
 
     const message = await buildTTSText(this.client, { member: interaction.member, content: userMessage, extras });
 
     if (message.length === 0) {
-      await interaction.editReply(localizer.t('command.say.empty'));
+      await reply(localizer.t('command.say.empty'));
       return;
     }
 
-    const { error, joined, channel } = await ensureVoiceConnection(ttsPlayer, interaction.member);
+    // The audio starts being generated as soon as the checks pass, while the bot joins the channel.
+    let prepared = null;
+    const { error, joined, channel } = await ensureVoiceConnection(ttsPlayer, interaction.member, () => {
+      prepared = ttsPlayer.prepare(message, providerName, extras);
+    });
+
     if (error) {
-      await interaction.editReply(localizer.t(error));
+      if (prepared) {
+        ttsPlayer.discard(prepared);
+      }
+      await reply(localizer.t(error));
       return;
     }
 
-    await interaction.editReply(joined ?
+    // Queue it before replying, the reply doesn't have to delay the audio.
+    ttsPlayer.enqueue(prepared);
+    await reply(joined ?
       localizer.t('command.say.joined.withrequest', { channel: channel.toString(), request: userMessage }) :
       localizer.t('command.say.success', { request: userMessage }));
-    return ttsPlayer.say(message, providerName, extras);
   }
 }
 

@@ -42,7 +42,7 @@ const config = new ConfigProvider({
     TTS_CHANNEL_IGNORE_PREFIX: '//',
     ELEVENLABS_API_KEY: null,
     ELEVENLABS_VOICE_ID: 'EXAVITQu4vr4xnSDxMaL',
-    ELEVENLABS_MODEL_ID: 'eleven_v3',
+    ELEVENLABS_MODEL_ID: 'eleven_flash_v2_5',
     ELEVENLABS_LANGUAGE: 'en',
     ELEVENLABS_STABILITY: 0.75,
     ELEVENLABS_SIMILARITY_BOOST: 0.75,

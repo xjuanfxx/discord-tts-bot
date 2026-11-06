@@ -26,12 +26,18 @@ class Queue {
   /**
    * Removes every item that matches the predicate.
    * @param {Function} predicate
-   * @returns {number} The number of removed items.
+   * @returns {Array} The removed items.
    */
   removeWhere(predicate) {
-    const before = this.store.length;
-    this.store = this.store.filter((item) => !predicate(item));
-    return before - this.store.length;
+    const removed = [];
+    this.store = this.store.filter((item) => {
+      if (predicate(item)) {
+        removed.push(item);
+        return false;
+      }
+      return true;
+    });
+    return removed;
   }
 
   clear() {

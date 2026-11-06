@@ -26,10 +26,12 @@ const isServerMuted = (guild) => {
  * Makes sure the bot is in the same voice channel as the member, joining it if needed.
  * @param {TTSPlayer} ttsPlayer
  * @param {Discord.GuildMember} member
+ * @param {Function} [onCanSpeak] Called as soon as every check passed, before waiting for the connection.
+ * Used to start generating the audio while the bot joins the channel.
  * @returns {Promise<{ error?: string, joined?: boolean, channel?: Discord.VoiceBasedChannel }>}
  * error is a locale key to reply with, joined is true if the bot just joined the channel.
  */
-const ensureVoiceConnection = async (ttsPlayer, member) => {
+const ensureVoiceConnection = async (ttsPlayer, member, onCanSpeak = () => null) => {
   const { guild } = member;
   const memberChannel = member.voice.channel;
 
@@ -46,6 +48,7 @@ const ensureVoiceConnection = async (ttsPlayer, member) => {
       return { error: 'error.channel.server_muted' };
     }
 
+    onCanSpeak();
     return { joined: false, channel: memberChannel };
   }
 
@@ -53,6 +56,8 @@ const ensureVoiceConnection = async (ttsPlayer, member) => {
   if (cantConnectReason) {
     return { error: cantConnectReason };
   }
+
+  onCanSpeak();
 
   try {
     await ttsPlayer.voice.connect(memberChannel);

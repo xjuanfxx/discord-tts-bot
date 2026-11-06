@@ -47,7 +47,7 @@ class ElevenLabsProvider extends AbstractProvider {
     const voice = extras.voice || this.config.get('ELEVENLABS_VOICE_ID');
 
     try {
-      const response = await axios.post(`${API_URL}/text-to-speech/${encodeURIComponent(voice)}`, {
+      const response = await axios.post(`${API_URL}/text-to-speech/${encodeURIComponent(voice)}/stream`, {
         text,
         model_id: this.config.get('ELEVENLABS_MODEL_ID'),
         voice_settings: {
