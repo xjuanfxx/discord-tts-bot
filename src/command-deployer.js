@@ -24,10 +24,12 @@ client.registry
     ['all-tts', 'All TTS Commands'],
     ['amazon-tts', 'Amazon TTS Commands'],
     ['config', 'Configuration Commands'],
+    ['dictionary', 'Dictionary Commands'],
     ['google-tts', 'Google TTS Commands'],
     ['other-tts', 'Other TTS Commands'],
     ['misc', 'Miscellaneous Commands'],
-    ['ms-tts', 'Microsoft TTS Commands']
+    ['ms-tts', 'Microsoft TTS Commands'],
+    ['elevenlabs-tts', 'ElevenLabs TTS Commands']
   ])
   .registerCommandsIn(path.join(__dirname, './commands/main'));
 
