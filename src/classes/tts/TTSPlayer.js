@@ -12,6 +12,8 @@ class TTSPlayer {
 
     this.queue = new Queue();
     this.speaking = false;
+    this.currentMessageId = null;
+    this.nextMessageId = 0;
     this.voice = new VoiceManager(guild);
 
     this.initializePlayer();
@@ -41,27 +43,23 @@ class TTSPlayer {
   }
 
   async say(sentence, providerName, extras = {}) {
-    // URL Detector
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-
-    // Replace URL with SUS
-    const sanitizedSentence = sentence.replace(urlRegex, 'ඞ');
-
     const provider = this.providerManager.getProvider(providerName);
 
     let payload;
     try {
-      payload = await provider.createPayload(sanitizedSentence, extras);
+      payload = await provider.createPayload(sentence, extras);
     } catch (error) {
       logger.error(`Failed to create TTS payload for provider ${providerName} in guild ${this.guild.name}: ${error.message}`);
       return;
     }
 
-    if (Array.isArray(payload)) {
-      payload.forEach((p) => this.queue.enqueue(p));
-    } else {
-      this.queue.enqueue(payload);
-    }
+    // Some providers split a message into several payloads, tag them so /skip can skip the whole message.
+    const messageId = this.nextMessageId++;
+    const payloads = Array.isArray(payload) ? payload : [payload];
+    payloads.forEach((p) => {
+      p.messageId = messageId;
+      this.queue.enqueue(p);
+    });
 
     this.startDisconnectScheduler();
 
@@ -76,6 +74,7 @@ class TTSPlayer {
     }
 
     const payload = this.queue.dequeue();
+    this.currentMessageId = payload.messageId;
     const provider = this.providerManager.getProvider(payload.providerName);
 
     logger.info(provider.getPlayLogMessage(payload, this.guild));
@@ -88,22 +87,21 @@ class TTSPlayer {
     }));
   }
 
+  /**
+   * Skips the message that is currently being said (including all of its remaining parts).
+   * @returns {boolean} Whether something was skipped.
+   */
   skip() {
-    this.stopDisconnectScheduler();
-
-    if (this.queue.length > 0) {
-      this.queue.shift();
+    if (!this.speaking) {
+      return false;
     }
 
-    this.speaking = false;
+    const skippedId = this.currentMessageId;
+    this.queue.removeWhere((payload) => payload.messageId === skippedId);
+
+    // Stopping the player emits 'idle', which plays the next message in the queue (if any).
     this.voice.player.stop(true);
-
-    if (this.queue.length > 0) {
-      const nextMessage = this.queue[0];
-      this.say(nextMessage.text, nextMessage.provider, nextMessage.extras);
-    } else {
-      this.voice.disconnect();
-    }
+    return true;
   }
 
   stop() {
@@ -113,6 +111,7 @@ class TTSPlayer {
 
     this.queue.clear();
     this.speaking = false;
+    this.currentMessageId = null;
     this.voice.disconnect();
     this.voice.player.stop(true);
 
