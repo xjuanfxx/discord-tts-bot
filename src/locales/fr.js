@@ -161,6 +161,14 @@ const COMMAND = {
   'command.edge.setting.rate': 'débit',
   'command.edge.setting.pitch': 'ton',
 
+  'command.fish.voices.embed.title': 'Voix Fish Audio ({language})',
+  'command.fish.voices.embed.footer': 'Utilisez /fish_set_my voice ID pour en choisir une pour vous.',
+  'command.fish.voices.empty': 'Aucune voix Fish Audio trouvée pour **{language}**. Essayez un autre nom ou une autre langue.',
+  'command.fish.voices.error': "Je n'ai pas pu obtenir la liste des voix de Fish Audio, réessayez plus tard.",
+  'command.fish.settings.voice.unsupported': "La voix **{voice}** n'existe pas. Utilisez **/fish_voices** pour chercher des voix.",
+  'command.fish.settings.my.voice.success': 'Vous avez changé votre voix Fish Audio à **{voice}** avec succès.',
+  'command.fish.settings.default.voice.success': 'Vous avez changé la voix Fish Audio par défaut à **{voice}** avec succès.',
+
   'command.locale.success': 'Vous avez changée la langue du bot à **{locale}**.',
 
   'command.max_length.success': 'Les messages de ce serveur peuvent maintenant contenir jusqu\'à **{length}** caractères.',
@@ -176,6 +184,7 @@ const TTS = {
 };
 
 const CHANNEL_COMMANDS = {
+  'channel_commands.fish.settings.voice.success': 'Vous avez changé la voix Fish Audio de ce canal à **{voice}** avec succès.',
   'channel_commands.edge.settings.success': 'Le réglage Edge « {setting} » de ce canal est maintenant **{value}**.',
   'channel_commands.elevenlabs.settings.voice.success': 'Vous avez changé la voix de ce canal à **{voice}** avec succès.',
 

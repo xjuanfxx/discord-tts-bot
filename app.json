@@ -99,6 +99,15 @@
       "description": "Default voice for the free Edge provider (e.g. es-MX-DaliaNeural).",
       "value": "en-US-AriaNeural",
       "required": false
+    },
+    "DISCORD_FISH_API_KEY": {
+      "description": "Your Fish Audio API key. Leave empty to disable the Fish Audio provider.",
+      "required": false
+    },
+    "DISCORD_FISH_MODEL": {
+      "description": "The Fish Audio model (s2.1-pro-free is free, s2.1-pro is paid).",
+      "value": "s2.1-pro-free",
+      "required": false
     }
   }
 }

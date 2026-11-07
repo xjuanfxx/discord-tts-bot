@@ -36,7 +36,8 @@ client.registry
     ['misc', 'Miscellaneous Commands'],
     ['ms-tts', 'Microsoft TTS Commands'],
     ['elevenlabs-tts', 'ElevenLabs TTS Commands'],
-    ['edge-tts', 'Edge TTS Commands']
+    ['edge-tts', 'Edge TTS Commands'],
+    ['fish-tts', 'Fish Audio TTS Commands']
   ])
   .registerCommandsIn(path.join(__dirname, './commands/main'));
 

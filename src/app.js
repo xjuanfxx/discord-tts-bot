@@ -52,7 +52,13 @@ const config = new ConfigProvider({
     ELEVENLABS_STYLE: 0.3,
     ELEVENLABS_SPEAKER_BOOST: true,
     ELEVENLABS_OUTPUT_FORMAT: 'mp3_44100_128',
-    ELEVENLABS_MAX_MESSAGE_LENGTH: 0
+    ELEVENLABS_MAX_MESSAGE_LENGTH: 0,
+    FISH_API_KEY: null,
+    FISH_VOICE_ID: null,
+    FISH_MODEL: 's2.1-pro-free',
+    FISH_LANGUAGE: 'en',
+    FISH_LATENCY: 'balanced',
+    FISH_MAX_MESSAGE_LENGTH: 0
   },
   types: {
     TOKEN: 'string',
@@ -81,7 +87,13 @@ const config = new ConfigProvider({
     ELEVENLABS_STYLE: 'number',
     ELEVENLABS_SPEAKER_BOOST: 'boolean',
     ELEVENLABS_OUTPUT_FORMAT: 'string',
-    ELEVENLABS_MAX_MESSAGE_LENGTH: 'number'
+    ELEVENLABS_MAX_MESSAGE_LENGTH: 'number',
+    FISH_API_KEY: ['string', 'null'],
+    FISH_VOICE_ID: ['string', 'null'],
+    FISH_MODEL: 'string',
+    FISH_LANGUAGE: 'string',
+    FISH_LATENCY: 'string',
+    FISH_MAX_MESSAGE_LENGTH: 'number'
   },
   customValidators: {
     PROVIDER_TYPE: (value) => {
@@ -159,7 +171,8 @@ client.registry
     ['misc', 'Miscellaneous Commands'],
     ['ms-tts', 'Microsoft TTS Commands'],
     ['elevenlabs-tts', 'ElevenLabs TTS Commands'],
-    ['edge-tts', 'Edge TTS Commands']
+    ['edge-tts', 'Edge TTS Commands'],
+    ['fish-tts', 'Fish Audio TTS Commands']
   ])
   .registerCommandsIn(path.join(__dirname, './commands/main'));
 

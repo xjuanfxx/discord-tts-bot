@@ -25,5 +25,11 @@
   "elevenlabs_style": 0.3,
   "elevenlabs_speaker_boost": true,
   "elevenlabs_output_format": "mp3_44100_128",
-  "elevenlabs_max_message_length": 0
+  "elevenlabs_max_message_length": 0,
+  "fish_api_key": "",
+  "fish_voice_id": "",
+  "fish_model": "s2.1-pro-free",
+  "fish_language": "en",
+  "fish_latency": "balanced",
+  "fish_max_message_length": 0
 }

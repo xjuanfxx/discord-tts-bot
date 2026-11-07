@@ -7,13 +7,14 @@
 
 # Discord TTS Bot
 
-This is a simple TTS Bot that uses the Google Translate TTS API. With this bot you can send Text-to-Speech messages in multiple languages using Google Translate or other TTS engines (Microsoft Edge neural voices, Amazon, Microsoft, aeiou and ElevenLabs AI).
+This is a simple TTS Bot that uses the Google Translate TTS API. With this bot you can send Text-to-Speech messages in multiple languages using Google Translate or other TTS engines (Microsoft Edge neural voices, ElevenLabs AI, Fish Audio, Amazon, Microsoft and aeiou).
 
 > 💛 **Based on [discord-tts-bot](https://github.com/moonstar-x/discord-tts-bot) by [moonstar-x](https://github.com/moonstar-x).** This fork adds new voice providers, smarter text processing and many fixes on top of the original bot. All the credit for the original idea and code goes to its author, see [Credits](#credits). For the documentation of the original bot, visit its [official page](https://docs.moonstar-x.dev/discord-tts-bot/).
 
 ## What's new in this fork
 
 * **Microsoft Edge provider (free)**: natural sounding neural voices (322 voices, 45 in Spanish) with `/edge_say`, no API key needed. See [Edge](#edge).
+* **Fish Audio provider**: thousands of voices made by its community with `/fish_say`, using its free `s2.1-pro-free` model (needs a free API key). See [Fish Audio](#fish-audio).
 * **ElevenLabs AI provider**: realistic AI voices with `/elevenlabs_say`. Everything (API key, voice, model, voice settings, character limit) is set from the [configuration](#configuration). See [ElevenLabs](#elevenlabs).
 * **Emojis are read out loud by their name** in the language of the voice: 😎 → *"cara sonriendo con gafas de sol"* (es) / *"smiling face with sunglasses"* (en). Custom server emojis are read by their name, skin tones are omitted and repeated emojis are only read once.
 * **Mentions are read by name**: `@Juan`, `#general` and `@Mods` instead of being skipped.
@@ -167,7 +168,13 @@ Inside the `config` folder, rename the file *settings.json.example* to *settings
   "elevenlabs_style": 0.3,
   "elevenlabs_speaker_boost": true,
   "elevenlabs_output_format": "mp3_44100_128",
-  "elevenlabs_max_message_length": 0
+  "elevenlabs_max_message_length": 0,
+  "fish_api_key": "",
+  "fish_voice_id": "",
+  "fish_model": "s2.1-pro-free",
+  "fish_language": "en",
+  "fish_latency": "balanced",
+  "fish_max_message_length": 0
 }
 ```
 
@@ -223,6 +230,17 @@ Every setting can also be set with an environment variable: `DISCORD_` + the set
 | `elevenlabs_speaker_boost` | `true` | Use speaker boost. |
 | `elevenlabs_output_format` | `mp3_44100_128` | Audio format requested to ElevenLabs. |
 | `elevenlabs_max_message_length` | `0` | Max characters per message for ElevenLabs only (`0` = use `max_message_length`). |
+
+#### Fish Audio
+
+| Setting | Default | Description |
+|---|---|---|
+| `fish_api_key` | `""` | Your [Fish Audio](https://fish.audio) API key. The provider is disabled without it. |
+| `fish_voice_id` | `""` | Default voice (a voice model ID). Empty uses Fish Audio's default voice. Search with `/fish_voices`. |
+| `fish_model` | `s2.1-pro-free` | Model. `s2.1-pro-free` is free (fair use, no guarantees), `s2.1-pro` is the paid one. |
+| `fish_language` | `en` | Language of your voices (e.g. `es`), used to find voices by name and to read emoji names. |
+| `fish_latency` | `balanced` | `balanced` streams the audio (~0.6s until it starts), `normal` waits for the whole audio. |
+| `fish_max_message_length` | `0` | Max characters per message for Fish Audio only (`0` = use `max_message_length`). |
 
 ## Running on Docker
 
@@ -326,6 +344,7 @@ Each provider has its own say command, and its settings can be changed for yours
 | Amazon | `/amazon_say` | `/amazon_langs` · `/amazon_voices <language>` | `/amazon_set_my` · `_set_default` · `_set_channel` | `language`, `voice`, `volume`, `rate`, `pitch` |
 | Microsoft | `/ms_say` | `/ms_langs` · `/ms_voices <language>` | `/ms_set_my` · `_set_default` · `_set_channel` | `language`, `voice`, `volume`, `rate`, `pitch` |
 | Edge (free, neural) | `/edge_say` | `/edge_voices [language]` | `/edge_set_my` · `_set_default` · `_set_channel` | `voice` (name or ID), `rate`, `pitch` |
+| Fish Audio | `/fish_say` | `/fish_voices [search] [language]` | `/fish_set_my` · `_set_default` · `_set_channel` | `voice` (name or ID) |
 | ElevenLabs | `/elevenlabs_say` | `/elevenlabs_voices` | `/elevenlabs_set_my` · `_set_default` · `_set_channel` | `voice` (name or ID) |
 | aeiou | `/aeiou_say` | — | — | — |
 
@@ -341,6 +360,16 @@ The Edge provider uses the neural voices of Microsoft Edge's *Read Aloud* featur
 * Use it by default with `/set_default_provider Edge`, and set the default voice for every server with `edge_voice` in the config.
 
 > This is not an official API (just like the Google Translate, Amazon and Microsoft providers), so Microsoft could change it at any time. The bot keeps a connection open per voice, so after the first message the audio starts in around half a second.
+
+## Fish Audio
+
+[Fish Audio](https://fish.audio) has thousands of voices uploaded by its community (more than a thousand in Spanish) and a **free model, `s2.1-pro-free`**, which is the default. It's meant for testing and personal projects: it has fair use limits and no uptime guarantees, and Fish Audio could stop offering it for free.
+
+1. Create an account in Fish Audio, create an API key and set it in `fish_api_key`.
+2. Set `fish_language` to the language you want (e.g. `es`).
+3. Search voices with `/fish_voices` (most used first) or `/fish_voices search:name`, and pick one with `/fish_set_my voice <name or ID>`, or for the whole server with `/fish_set_default voice`. You can also set a default with `fish_voice_id` (the ID is in the URL of the voice in the Fish Audio website).
+
+> Fish Audio's terms don't allow using voices that impersonate real people without their consent, keep that in mind when choosing community voices.
 
 ## ElevenLabs
 
@@ -398,13 +427,13 @@ The effective limit is the lowest of them, so servers can only lower the limit s
 
 </details>
 
-Edge, Amazon, Microsoft and ElevenLabs have their own lists: use `/edge_voices`, `/amazon_langs`, `/ms_langs` and `/elevenlabs_voices`.
+Edge, Fish Audio, Amazon, Microsoft and ElevenLabs have their own lists: use `/edge_voices`, `/fish_voices`, `/amazon_langs`, `/ms_langs` and `/elevenlabs_voices`.
 
 ## Credits
 
 * **[moonstar-x](https://github.com/moonstar-x)** created the original [discord-tts-bot](https://github.com/moonstar-x/discord-tts-bot) and the [`@greencoast`](https://github.com/greencoast-studios) libraries this bot is built on. This fork wouldn't exist without their work. If you like the bot, go give the [original repository](https://github.com/moonstar-x/discord-tts-bot) a ⭐.
 * **[xjuanfxx](https://github.com/xjuanfxx)** maintains this fork.
-* Built with [discord.js](https://discord.js.org) and [@discordjs/voice](https://github.com/discordjs/discord.js/tree/main/packages/voice), [google-tts-api](https://github.com/zlargon/google-tts), [msedge-tts](https://github.com/Migushthe2nd/MsEdgeTTS) and [ElevenLabs](https://elevenlabs.io). Emoji names come from [Emojibase](https://emojibase.dev) (Unicode CLDR annotations).
+* Built with [discord.js](https://discord.js.org) and [@discordjs/voice](https://github.com/discordjs/discord.js/tree/main/packages/voice), [google-tts-api](https://github.com/zlargon/google-tts), [msedge-tts](https://github.com/Migushthe2nd/MsEdgeTTS), [ElevenLabs](https://elevenlabs.io) and [Fish Audio](https://fish.audio). Emoji names come from [Emojibase](https://emojibase.dev) (Unicode CLDR annotations).
 
 ## License
 
